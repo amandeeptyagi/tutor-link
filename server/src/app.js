@@ -1,23 +1,38 @@
-import { errorHandler } from "./middleware/errorHandler.js";
-import { FRONTEND_URL } from "./config/env.js";
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from "cookie-parser";
 
+import { FRONTEND_URL } from "./config/env.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { notFound } from "./middleware/notFound.js";
+
+// import your route files here
+// import studentRoutes from './routes/student.routes.js';
+// import teacherRoutes from './routes/teacher.routes.js';
+// import adminRoutes from './routes/admin.routes.js';
+
 const app = express();
 
-//middlewares
-app.use(cookieParser());
+// Middlewares
+app.use(express.json()); // Body parser
+app.use(cookieParser()); // For reading cookies
+
+// CORS setup for frontend
 app.use(cors({
-    origin: FRONTEND_URL, // frontend
-    credentials: true,   // allow cookies
+  origin: FRONTEND_URL,
+  credentials: true,
 }));
-app.use(errorHandler);
-app.use(express.json());
+
 app.use(morgan('dev'));
 
-// All Routes
-// app.use('/api/teacher', ...)
+// Routes
+// app.use('/api/student', studentRoutes);
+// app.use('/api/teacher', teacherRoutes);
+// app.use('/api/admin', adminRoutes);
+
+// Error handler (last middleware)
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;
