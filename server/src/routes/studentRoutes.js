@@ -27,27 +27,27 @@ router.post("/register", studentRegister)
 router.use(protect, studentOnly);
 
 // AUTH
-router.post("/reset-password", protect, studentOnly, studentResetPassword)
+router.post("/reset-password", studentResetPassword)
 
 // PROFILE
-router.get("/profile", protect, studentOnly, getStudentProfile)
-router.put("/profile", protect, studentOnly, updateStudentProfile)
+router.get("/profile", getStudentProfile)
+router.put("/profile", updateStudentProfile)
 
 // TEACHER SEARCH & VIEW
-router.get("/teachers", protect, studentOnly, searchTeachers)
-router.get("/teacher/:teacherId", protect, studentOnly, viewTeacher)
-router.post("/favourite/:teacherId", protect, studentOnly, addFavourite)
-router.get("/favourites", protect, studentOnly, getFavourites)
+router.get("/teachers", searchTeachers)
+router.get("/teacher/:teacherId", viewTeacher)
+router.post("/favourite/:teacherId", addFavourite)
+router.get("/favourites", getFavourites)
 
 // SUBSCRIPTION
-router.post("/subscription/request/:teacherId", protect, studentOnly, requestSubscription)
-router.get("/subscription/status", protect, studentOnly, getSubscriptionStatus)
-router.delete("/subscription/:teacherId", protect, studentOnly, cancelSubscription)
+router.post("/subscription/request/:teacherId", requestSubscription)
+router.get("/subscription/status", getSubscriptionStatus)
+router.delete("/subscription/:teacherId", cancelSubscription)
 
 // RATING
-router.post("/rating/:teacherId", protect, studentOnly, rateTeacher)
+router.post("/rating/:teacherId", rateTeacher)
 
 // RESOURCES
-router.get("/resources/:teacherId", protect, studentOnly, getResourcesIfSubscribed)
+router.get("/resources/:teacherId", getResourcesIfSubscribed)
 
 export default router;
