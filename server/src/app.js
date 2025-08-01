@@ -7,10 +7,11 @@ import { FRONTEND_URL } from "./config/env.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { notFound } from "./middleware/notFound.js";
 
-// import your route files here
-// import studentRoutes from './routes/student.routes.js';
-// import teacherRoutes from './routes/teacher.routes.js';
-// import adminRoutes from './routes/admin.routes.js';
+// route files
+import loginRoutes from './routes/loginRoutes.js'
+import studentRoutes from './routes/studentRoutes.js';
+import teacherRoutes from './routes/teacherRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -27,11 +28,12 @@ app.use(cors({
 app.use(morgan('dev'));
 
 // Routes
-// app.use('/api/student', studentRoutes);
-// app.use('/api/teacher', teacherRoutes);
-// app.use('/api/admin', adminRoutes);
+app.use('/api', loginRoutes);
+app.use('/api/student', studentRoutes);
+app.use('/api/teacher', teacherRoutes);
+app.use('/api/admin', adminRoutes);
 
-// Error handler (last middleware)
+// Error handler (last middlewares)
 app.use(notFound);
 app.use(errorHandler);
 
