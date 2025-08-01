@@ -9,9 +9,9 @@ import { notFound } from "./middleware/notFound.js";
 
 // route files
 import loginRoutes from './routes/loginRoutes.js'
-import studentRoutes from './routes/studentRoutes.js';
-import teacherRoutes from './routes/teacherRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
+// import studentRoutes from './routes/studentRoutes.js';
+// import teacherRoutes from './routes/teacherRoutes.js';
+// import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -29,9 +29,9 @@ app.use(morgan('dev'));
 
 // Routes
 app.use('/api', loginRoutes);
-app.use('/api/student', studentRoutes);
-app.use('/api/teacher', teacherRoutes);
-app.use('/api/admin', adminRoutes);
+// app.use('/api/student', studentRoutes);
+// app.use('/api/teacher', teacherRoutes);
+// app.use('/api/admin', adminRoutes);
 
 // Error handler (last middlewares)
 app.use(notFound);

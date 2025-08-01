@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, NODE_ENV } from "../config/env";
+import { JWT_SECRET, NODE_ENV } from "../config/env.js";
 
 const generateToken = (res, userId, userRole) => {
     const token = jwt.sign(

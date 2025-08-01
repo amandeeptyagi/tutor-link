@@ -31,7 +31,7 @@ export const login = asyncHandler(async (req, res) => {
     throw new Error("Invalid email or password");
   }
 
-  // generateToken(res, userId, role, adminId?)
+  // generateToken(res, userId, role)
   generateToken(res, result.user.id, result.user.role);
 
   res.status(200).json({
