@@ -17,7 +17,7 @@ import {
   getTeacherAnalytics,
 } from "../controllers/teacherController.js";
 
-import { protect, teacherOnly } from "../middleware/authMiddleware.js";
+import { protect, allowRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ const router = express.Router();
 router.post("/register", registerTeacher);
 
 //auth middleware
-router.use(protect, teacherOnly);
+router.use(protect, allowRoles("teacher"));
 
 // AUTH
 router.post("/reset-password", resetTeacherPassword);

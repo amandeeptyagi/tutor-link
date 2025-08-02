@@ -19,12 +19,12 @@ import {
   updateAdminProfile,
 } from "../controllers/adminController.js";
 
-import { protect, adminOnly } from "../middleware/authMiddleware.js";
+import { protect, allowRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 //auth middleware
-router.use(protect, adminOnly);
+router.use(protect, allowRoles("admin"));
 
 // AUTH
 router.post("/reset-password", resetAdminPassword);

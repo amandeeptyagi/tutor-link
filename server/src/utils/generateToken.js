@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, NODE_ENV } from "../config/env.js";
 
-const generateToken = (res, userId, userRole) => {
+const generateToken = (res, userId, userRole, userName) => {
     const token = jwt.sign(
-        { id: userId, role: userRole },
+        { id: userId, role: userRole, name: userName },
         JWT_SECRET,
         { expiresIn: "30d" }
     );

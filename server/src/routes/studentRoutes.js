@@ -16,7 +16,7 @@ import {
     getResourcesIfSubscribed
 } from "../controllers/studentController.js";
 
-import { protect, studentOnly } from "../middleware/authMiddleware.js";
+import { protect, allowRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ const router = express.Router();
 router.post("/register", studentRegister)
 
 //auth middleware
-router.use(protect, studentOnly);
+router.use(protect, allowRoles("student"));
 
 // AUTH
 router.post("/reset-password", studentResetPassword)

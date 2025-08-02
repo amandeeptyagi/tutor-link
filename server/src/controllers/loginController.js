@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
-import { findStudentByEmail, findTeacherByEmail, findAdminByEmail } from "../models/loginModel.js";
+import { findStudentByEmail, findTeacherByEmail, findAdminByEmail } from "../queries/loginQueries.js";
 import generateToken from "../utils/generateToken.js";
 
 const getUserByEmail = async (email) => {
@@ -31,15 +31,14 @@ export const login = asyncHandler(async (req, res) => {
     throw new Error("Invalid email or password");
   }
 
-  // generateToken(res, userId, role)
-  generateToken(res, result.user.id, result.user.role);
+  // generateToken(res, userId, userRole, userName)
+  generateToken(res, result.user.id, result.user.role, result.user.name);
 
   res.status(200).json({
     message: "Login successful",
     user: {
       id: result.user.id,
       name: result.user.name,
-      email: result.user.email,
       role: result.user.role,
     },
   });
