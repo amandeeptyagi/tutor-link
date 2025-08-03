@@ -1,0 +1,133 @@
+import asyncHandler from "express-async-handler";
+import bcrypt from "bcryptjs";
+import generateToken from "../utils/generateToken.js";
+import * as StudentQuery from "../queries/studentQueries.js";
+
+// REGISTER
+export const studentRegister = asyncHandler(async (req, res) => {
+  const { name, email, password, phone } = req.body;
+
+  const existing = await StudentQuery.findStudentByEmail(email);
+  if (existing) {
+    res.status(400);
+    throw new Error("Student already exists");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const student = await StudentQuery.createStudent({ name, email, phone, password: hashedPassword });
+
+  generateToken(res, student.id, student.role, student.name);
+  res.status(201).json({ message: "Student registered", student });
+});
+
+//change password
+export const changeStudentPassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    res.status(400);
+    throw new Error("Both current and new passwords are required");
+  }
+
+  const student = await StudentQuery.getStudentByIdWithPassword(req.user.id);
+  if (!student) {
+    res.status(404);
+    throw new Error("Student not found");
+  }
+
+  const isMatch = await bcrypt.compare(currentPassword, student.password);
+  if (!isMatch) {
+    res.status(401);
+    throw new Error("Current password is incorrect");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await StudentQuery.updateStudentPasswordById(req.user.id, hashedPassword);
+
+  res.status(200).json({ message: "Password changed successfully" });
+});
+
+// GET PROFILE
+export const getStudentProfile = asyncHandler(async (req, res) => {
+  const student = await StudentQuery.getStudentById(req.user.id);
+  if (!student) {
+    res.status(404);
+    throw new Error("Student not found");
+  }
+
+  res.json(student);
+});
+
+// UPDATE PROFILE
+export const updateStudentProfile = asyncHandler(async (req, res) => {
+  const student = await StudentQuery.updateStudentProfile(req.user.id, req.body);
+  res.json({ message: "Profile updated", student });
+});
+
+// SEARCH TEACHERS
+export const searchTeachers = asyncHandler(async (req, res) => {
+  const teachers = await StudentQuery.searchTeachers(req.query);
+  res.json(teachers);
+});
+
+// VIEW TEACHER
+export const viewTeacher = asyncHandler(async (req, res) => {
+  const teacher = await StudentQuery.getTeacherById(req.params.teacherId);
+  if (!teacher) {
+    res.status(404);
+    throw new Error("Teacher not found");
+  }
+  res.json(teacher);
+});
+
+// ADD FAVOURITE
+export const addFavourite = asyncHandler(async (req, res) => {
+  await StudentQuery.addFavouriteTeacher(req.user.id, req.params.teacherId);
+  res.json({ message: "Teacher added to favourites" });
+});
+
+// REMOVE FAVOURITE
+export const removeFavourite = asyncHandler(async (req, res) => {
+  await StudentQuery.removeFavouriteTeacher(req.user.id, req.params.teacherId);
+  res.json({ message: "Teacher removed from favourites" });
+});
+
+// GET FAVOURITES
+export const getFavourites = asyncHandler(async (req, res) => {
+  const teachers = await StudentQuery.getFavouriteTeachers(req.user.id);
+  res.json(teachers);
+});
+
+// SUBSCRIPTION
+export const requestSubscription = asyncHandler(async (req, res) => {
+  await StudentQuery.requestSubscription(req.user.id, req.params.teacherId);
+  res.json({ message: "Subscription request sent" });
+});
+
+export const getSubscriptionStatus = asyncHandler(async (req, res) => {
+  const subscriptions = await StudentQuery.getSubscriptions(req.user.id);
+  res.json(subscriptions);
+});
+
+export const cancelSubscription = asyncHandler(async (req, res) => {
+  await StudentQuery.cancelSubscription(req.user.id, req.params.teacherId);
+  res.json({ message: "Subscription cancelled" });
+});
+
+// RATING
+export const rateTeacher = asyncHandler(async (req, res) => {
+  await StudentQuery.rateTeacher(req.user.id, req.params.teacherId, req.body.rating);
+  res.json({ message: "Rating submitted/updated" });
+});
+
+// RESOURCES
+export const getResourcesIfSubscribed = asyncHandler(async (req, res) => {
+  const isSubscribed = await StudentQuery.isSubscribed(req.user.id, req.params.teacherId);
+  if (!isSubscribed) {
+    res.status(403);
+    throw new Error("Access denied: not subscribed");
+  }
+
+  const resources = await StudentQuery.getResources(req.params.teacherId);
+  res.json(resources);
+});

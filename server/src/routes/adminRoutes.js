@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  resetAdminPassword,
+  changeAdminPassword,
   getAllTeachers,
   getSingleTeacher,
   updateTeacherStatus,
@@ -27,7 +27,7 @@ const router = express.Router();
 router.use(protect, allowRoles("admin"));
 
 // AUTH
-router.post("/reset-password", resetAdminPassword);
+router.post("/change-password", changeAdminPassword);
 
 // TEACHER MODERATION
 router.get("/teachers", getAllTeachers);

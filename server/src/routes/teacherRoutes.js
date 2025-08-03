@@ -1,7 +1,7 @@
 import express from "express";
 import {
   registerTeacher,
-  resetTeacherPassword,
+  changeTeacherPassword,
   getTeacherProfile,
   updateTeacherProfile,
   uploadResource,
@@ -28,7 +28,7 @@ router.post("/register", registerTeacher);
 router.use(protect, allowRoles("teacher"));
 
 // AUTH
-router.post("/reset-password", resetTeacherPassword);
+router.post("/change-password", changeTeacherPassword);
 
 // PROFILE
 router.get("/profile", getTeacherProfile);

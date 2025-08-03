@@ -2,12 +2,13 @@ import express from "express";
 
 import {
     studentRegister,
-    studentResetPassword,
+    changeStudentPassword,
     getStudentProfile,
     updateStudentProfile,
     searchTeachers,
     viewTeacher,
     addFavourite,
+    removeFavourite,
     getFavourites,
     requestSubscription,
     getSubscriptionStatus,
@@ -27,7 +28,7 @@ router.post("/register", studentRegister)
 router.use(protect, allowRoles("student"));
 
 // AUTH
-router.post("/reset-password", studentResetPassword)
+router.post("/change-password", changeStudentPassword)
 
 // PROFILE
 router.get("/profile", getStudentProfile)
@@ -37,6 +38,7 @@ router.put("/profile", updateStudentProfile)
 router.get("/teachers", searchTeachers)
 router.get("/teacher/:teacherId", viewTeacher)
 router.post("/favourite/:teacherId", addFavourite)
+router.delete("/favourite/:teacherId", removeFavourite)
 router.get("/favourites", getFavourites)
 
 // SUBSCRIPTION
