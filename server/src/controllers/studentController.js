@@ -110,7 +110,7 @@ export const getSubscriptionStatus = asyncHandler(async (req, res) => {
 });
 
 export const cancelSubscription = asyncHandler(async (req, res) => {
-  await StudentQuery.cancelSubscription(req.user.id, req.params.teacherId);
+  await StudentQuery.cancelSubscription(req.params.subscriptionId, req.user.id);
   res.json({ message: "Subscription cancelled" });
 });
 

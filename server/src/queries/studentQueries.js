@@ -137,6 +137,21 @@ export const getFavouriteTeachers = async (studentId) => {
 
 // Subscription
 export const requestSubscription = async (studentId, teacherId) => {
+
+  // Check if teacher is verified
+  const checkTeacher = await pool.query(
+    `SELECT is_verified FROM teachers WHERE id = $1`,
+    [teacherId]
+  );
+
+  if (checkTeacher.rows.length === 0) {
+    throw new Error("Teacher not found");
+  }
+
+  if (!checkTeacher.rows[0].is_verified) {
+    throw new Error("Cannot add unverified teacher to Subscription");
+  }
+
   const check = await pool.query(
     `SELECT * FROM subscriptions WHERE student_id = $1 AND teacher_id = $2`,
     [studentId, teacherId]
@@ -148,6 +163,9 @@ export const requestSubscription = async (studentId, teacherId) => {
        VALUES ($1, $2, 'pending')`,
       [studentId, teacherId]
     );
+  }
+  else{
+    throw new Error("Request already sent");
   }
 };
 
@@ -162,15 +180,27 @@ export const getSubscriptions = async (studentId) => {
   return result.rows;
 };
 
-export const cancelSubscription = async (studentId, teacherId) => {
+export const cancelSubscription = async (subscriptionId, studentId) => {
   await pool.query(
-    `DELETE FROM subscriptions WHERE student_id = $1 AND teacher_id = $2`,
-    [studentId, teacherId]
+    `DELETE FROM subscriptions WHERE id = $1 AND student_id = $2`,
+    [subscriptionId, studentId]
   );
 };
 
 // Rating
 export const rateTeacher = async (studentId, teacherId, rating) => {
+
+  // Check if student is subscribed to this teacher
+  const subCheck = await pool.query(
+    `SELECT * FROM subscriptions
+     WHERE student_id = $1 AND teacher_id = $2 AND status = 'approved'`,
+    [studentId, teacherId]
+  );
+
+  if (subCheck.rows.length === 0) {
+    throw new Error("You can rate only teachers you are subscribed to.");
+  }
+
   const check = await pool.query(
     `SELECT * FROM ratings WHERE student_id = $1 AND teacher_id = $2`,
     [studentId, teacherId]

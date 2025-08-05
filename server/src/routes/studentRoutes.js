@@ -43,8 +43,8 @@ router.get("/favourites", getFavourites)
 
 // SUBSCRIPTION
 router.post("/subscription/request/:teacherId", requestSubscription)
-router.get("/subscription/status", getSubscriptionStatus)
-router.delete("/subscription/:teacherId", cancelSubscription)
+router.get("/subscription", getSubscriptionStatus)
+router.delete("/subscription/:subscriptionId", cancelSubscription)
 
 // RATING
 router.post("/rating/:teacherId", rateTeacher)
