@@ -120,6 +120,11 @@ export const rateTeacher = asyncHandler(async (req, res) => {
   res.json({ message: "Rating submitted/updated" });
 });
 
+export const getTeacherRatings = asyncHandler(async (req, res) => {
+    const ratings = await StudentQuery.getTeacherRatings(req.params.teacherId);
+    res.json({ success: true, ratings });
+});
+
 // RESOURCES
 export const getResourcesIfSubscribed = asyncHandler(async (req, res) => {
   const isSubscribed = await StudentQuery.isSubscribed(req.user.id, req.params.teacherId);
