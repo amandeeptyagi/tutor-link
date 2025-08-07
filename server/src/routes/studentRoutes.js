@@ -19,12 +19,16 @@ import {
     getResourcesIfSubscribed
 } from "../controllers/studentController.js";
 
+import { maintenanceMiddleware, allowRegistrationMiddleware } from "../middleware/maintenanceMiddleware.js"
 import { protect, allowRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+//maintenanceMiddleware
+router.use(maintenanceMiddleware);
+
 //register
-router.post("/register", studentRegister)
+router.post("/register", allowRegistrationMiddleware, studentRegister);
 
 //auth middleware
 router.use(protect, allowRoles("student"));

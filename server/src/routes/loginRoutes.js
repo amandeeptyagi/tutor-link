@@ -7,7 +7,12 @@ import {
   // forgotPassword
 } from "../controllers/loginController.js";
 
+import { maintenanceMiddleware } from "../middleware/maintenanceMiddleware.js"
+
 const router = express.Router();
+
+//maintenanceMiddleware
+// router.use(maintenanceMiddleware); 
 
 router.post("/login", login);
 // router.post("/login/google", loginGoogle)

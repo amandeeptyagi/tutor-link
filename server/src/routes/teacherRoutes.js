@@ -17,12 +17,16 @@ import {
   getTeacherAnalytics,
 } from "../controllers/teacherController.js";
 
+import { maintenanceMiddleware, allowRegistrationMiddleware } from "../middleware/maintenanceMiddleware.js"
 import { protect, allowRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+//maintenanceMiddleware
+router.use(maintenanceMiddleware);
+
 //register
-router.post("/register", registerTeacher);
+router.post("/register", allowRegistrationMiddleware, registerTeacher);
 
 //auth middleware
 router.use(protect, allowRoles("teacher"));

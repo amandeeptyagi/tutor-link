@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-const maintenanceMiddleware = async (req, res, next) => {
+export const maintenanceMiddleware = async (req, res, next) => {
   try {
     const { rows } = await pool.query("SELECT maintenance_mode FROM platform_settings LIMIT 1");
     const maintenanceMode = rows[0]?.maintenance_mode;
@@ -18,4 +18,20 @@ const maintenanceMiddleware = async (req, res, next) => {
   }
 };
 
-export default maintenanceMiddleware;
+export const allowRegistrationMiddleware = async (req, res, next) => {
+  try {
+    const { rows } = await pool.query("SELECT registration_enabled FROM platform_settings LIMIT 1");
+    const registrationEnabled = rows[0]?.registration_enabled;
+
+    if (!registrationEnabled) {
+      return res.status(503).json({
+        message: "New registration not allow. Please try again later.",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Registration check failed:", error);
+    res.status(500).json({ message: "Internal server error during Registration check." });
+  }
+};

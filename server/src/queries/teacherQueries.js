@@ -7,11 +7,14 @@ export const findTeacherByEmail = async (email) => {
 };
 
 export const createTeacher = async ({ name, email, phone, password }) => {
+  const { rows } = await pool.query("SELECT auto_approval FROM platform_settings LIMIT 1");
+  const approval = rows[0]?.auto_approval;
+
   const result = await pool.query(
-    `INSERT INTO teachers (name, email, phone, password)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO teachers (name, email, phone, password, is_verified)
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING id, name, email, role`,
-    [name, email, phone, password]
+    [name, email, phone, password, approval]
   );
   return result.rows[0];
 };
