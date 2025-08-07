@@ -15,7 +15,7 @@ import {
     cancelSubscription,
     rateTeacher,
     getTeacherRatings,
-    // getTeacherGallery,
+    getTeacherGallery,
     getResourcesIfSubscribed
 } from "../controllers/studentController.js";
 
@@ -53,7 +53,7 @@ router.post("/rating/:teacherId", rateTeacher)
 router.get("/rating/:teacherId", getTeacherRatings);
 
 //TEACHER GALLERY
-// router.get("/gallery/:teacherId", getTeacherGallery);
+router.get("/gallery/:teacherId", getTeacherGallery);
 
 // RESOURCES
 router.get("/resources/:teacherId", getResourcesIfSubscribed)

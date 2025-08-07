@@ -35,13 +35,14 @@ export const getTeacherProfile = async (id) => {
 
 export const updateTeacherProfile = async (id, updates) => {
   const {
-    name, phone, profile_photo, gender, mode, street, city,
+    name, email, phone, profile_photo, gender, mode, street, city,
     state, pincode, subjects, class_from, class_to, timing,
     institute_name, location
   } = updates;
   const result = await pool.query(
     `UPDATE teachers SET
       name = $1,
+      email = $17
       phone = $2,
       profile_photo = $3,
       gender = $4,
@@ -62,7 +63,7 @@ export const updateTeacherProfile = async (id, updates) => {
     [
       name, phone, profile_photo, gender, mode, street, city,
       state, pincode, subjects, class_from, class_to, timing,
-      institute_name, location, id
+      institute_name, location, id, email
     ]
   );
   return result.rows[0];

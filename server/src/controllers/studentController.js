@@ -125,6 +125,12 @@ export const getTeacherRatings = asyncHandler(async (req, res) => {
     res.json({ success: true, ratings });
 });
 
+// Get teacher gallery images
+export const getTeacherGallery = asyncHandler(async (req, res) => {
+    const images = await StudentQuery.getGalleryImages(req.params.teacherId);
+    res.json({ success: true, images });
+});
+
 // RESOURCES
 export const getResourcesIfSubscribed = asyncHandler(async (req, res) => {
   const isSubscribed = await StudentQuery.isSubscribed(req.user.id, req.params.teacherId);

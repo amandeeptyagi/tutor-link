@@ -229,6 +229,12 @@ export const getTeacherRatings = async (teacherId) => {
   return result.rows;
 };
 
+// teacher gallery images
+export const getGalleryImages = async (teacherId) => {
+  const result = await pool.query(`SELECT * FROM gallery WHERE teacher_id = $1 ORDER BY created_at DESC`, [teacherId]);
+  return result.rows;
+};
+
 // Resources
 export const isSubscribed = async (studentId, teacherId) => {
   const result = await pool.query(
