@@ -101,22 +101,21 @@ export const addFavouriteTeacher = async (studentId, teacherId) => {
     throw new Error("Cannot add unverified teacher to favourites");
   }
 
-  // Add to favourites (merge into array if not already present)
+  // Add to favourites
   await pool.query(
-    `UPDATE students
-   SET favourites = array_append(favourites, $1::uuid)
-   WHERE id = $2 AND NOT (favourites @> ARRAY[$1::uuid])`,
-    [teacherId, studentId]
-  );
+  `INSERT INTO favourite_teachers (student_id, teacher_id)
+   VALUES ($1, $2)
+   ON CONFLICT (student_id, teacher_id) DO NOTHING`,
+  [studentId, teacherId]
+);
 };
 
 export const removeFavouriteTeacher = async (studentId, teacherId) => {
   await pool.query(
-    `UPDATE students
-     SET favourites = array_remove(favourites, $1::uuid)
-     WHERE id = $2`,
-    [teacherId, studentId]
-  );
+  `DELETE FROM favourite_teachers
+   WHERE student_id = $1 AND teacher_id = $2`,
+  [studentId, teacherId]
+);
 };
 
 
@@ -127,7 +126,7 @@ export const getFavouriteTeachers = async (studentId) => {
     FROM teachers
      WHERE
      id = ANY (
-       SELECT UNNEST(favourites) FROM students WHERE id = $1
+       SELECT teacher_id FROM favourite_teachers WHERE student_id = $1
      )`,
     [studentId]
   );
