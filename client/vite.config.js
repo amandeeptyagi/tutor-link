@@ -11,8 +11,9 @@ if (process.env.NODE_ENV === "development") {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(),
-  tailwindcss(),
+  plugins: [
+    react(),
+    tailwindcss(),
   ],
   resolve: {
     alias: {
