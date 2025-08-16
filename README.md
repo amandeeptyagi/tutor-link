@@ -23,5 +23,3 @@ Students can search, subscribe, and rate teachers. Teachers manage profiles, res
 ---
 
 > ⚠️ This project is in active development. More features and improvements are coming soon.
-
-

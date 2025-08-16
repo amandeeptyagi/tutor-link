@@ -1,11 +1,13 @@
 import express from "express";
+import { protect } from "../middleware/authMiddleware.js"
 
 import { 
   login,
   // loginGoogle,
   // verifyOTP,
   // forgotPassword
-} from "../controllers/loginController.js";
+  getUser
+} from "../controllers/authController.js";
 
 import { maintenanceMiddleware } from "../middleware/maintenanceMiddleware.js"
 
@@ -18,5 +20,7 @@ router.post("/login", login);
 // router.post("/login/google", loginGoogle)
 // router.post("/verify-otp", verifyOTP)
 // router.post("/forgot-password", forgotPassword)
+
+router.get("/user", protect, getUser);
 
 export default router;
