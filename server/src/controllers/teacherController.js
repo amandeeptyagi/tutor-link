@@ -16,28 +16,36 @@ export const registerTeacher = asyncHandler(async (req, res) => {
     const teacher = await TeacherQuery.createTeacher({ name, email, phone, password: hashedPassword });
 
     generateToken(res, teacher.id, teacher.role, teacher.name);
-    res.status(201).json({ success: true, message: "Teacher registered", teacher });
+    res.status(201).json({
+        success: true,
+        message: "Teacher registered",
+        user: {
+            id: teacher.id,
+            name: teacher.name,
+            role: teacher.role,
+        }
+    });
 });
 
 // Change password
 export const changeTeacherPassword = asyncHandler(async (req, res) => {
-   
+
     const { currentPassword, newPassword } = req.body;
 
-      if (!currentPassword || !newPassword) {
-    res.status(400);
-    throw new Error("Both current and new passwords are required");
-  }
+    if (!currentPassword || !newPassword) {
+        res.status(400);
+        throw new Error("Both current and new passwords are required");
+    }
     const teacher = await TeacherQuery.getTeacherByIdWithPassword(req.user.id);
     if (!teacher) {
-    res.status(404);
-    throw new Error("Teacher not found");
-  }
+        res.status(404);
+        throw new Error("Teacher not found");
+    }
     const isMatch = await bcrypt.compare(currentPassword, teacher.password);
     if (!isMatch) {
-    res.status(401);
-    throw new Error("Current password is incorrect");
-  }
+        res.status(401);
+        throw new Error("Current password is incorrect");
+    }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await TeacherQuery.updateTeacherPassword(req.user.id, hashedPassword);
     res.status(200).json({ success: true, message: "Password changed successfully" });
@@ -47,9 +55,9 @@ export const changeTeacherPassword = asyncHandler(async (req, res) => {
 export const getTeacherProfile = asyncHandler(async (req, res) => {
     const teacher = await TeacherQuery.getTeacherProfile(req.user.id);
     if (!teacher) {
-    res.status(404);
-    throw new Error("Teacher not found");
-  }
+        res.status(404);
+        throw new Error("Teacher not found");
+    }
     res.json({ success: true, teacher });
 });
 

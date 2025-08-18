@@ -44,7 +44,6 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
-
 // Get Current Authenticated User
 export const getUser = asyncHandler(async (req, res) => {
   if (!req.user) {
@@ -52,10 +51,10 @@ export const getUser = asyncHandler(async (req, res) => {
   }
 
   // `req.user` already populated in protect middleware
-  res.status(200).json({
-    id: req.user.id,
-    role: req.user.role,
-    name: req.user.name,
-  });
+  res.status(200).json({user: {
+      id: req.user.id,
+      name: req.user.name,
+      role: req.user.role,
+    }});
 });
 

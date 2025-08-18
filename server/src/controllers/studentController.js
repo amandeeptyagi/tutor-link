@@ -17,7 +17,14 @@ export const studentRegister = asyncHandler(async (req, res) => {
   const student = await StudentQuery.createStudent({ name, email, phone, password: hashedPassword });
 
   generateToken(res, student.id, student.role, student.name);
-  res.status(201).json({ message: "Student registered", student });
+  res.status(201).json({
+    message: "Student registered",
+    user: {
+      id: student.id,
+      name: student.name,
+      role: student.role,
+    }
+  });
 });
 
 //change password
@@ -121,14 +128,14 @@ export const rateTeacher = asyncHandler(async (req, res) => {
 });
 
 export const getTeacherRatings = asyncHandler(async (req, res) => {
-    const ratings = await StudentQuery.getTeacherRatings(req.params.teacherId);
-    res.json({ success: true, ratings });
+  const ratings = await StudentQuery.getTeacherRatings(req.params.teacherId);
+  res.json({ success: true, ratings });
 });
 
 // Get teacher gallery images
 export const getTeacherGallery = asyncHandler(async (req, res) => {
-    const images = await StudentQuery.getGalleryImages(req.params.teacherId);
-    res.json({ success: true, images });
+  const images = await StudentQuery.getGalleryImages(req.params.teacherId);
+  res.json({ success: true, images });
 });
 
 // RESOURCES
