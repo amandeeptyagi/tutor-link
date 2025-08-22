@@ -6,7 +6,8 @@ import {
   // loginGoogle,
   // verifyOTP,
   // forgotPassword
-  getUser
+  getUser,
+  logout
 } from "../controllers/authController.js";
 
 import { maintenanceMiddleware } from "../middleware/maintenanceMiddleware.js"
@@ -22,5 +23,6 @@ router.post("/login", login);
 // router.post("/forgot-password", forgotPassword)
 
 router.get("/user", protect, getUser);
+router.post("/logout", protect, logout);
 
 export default router;

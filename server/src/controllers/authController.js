@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 import { findStudentByEmail, findTeacherByEmail, findAdminByEmail } from "../queries/loginQueries.js";
 import generateToken from "../utils/generateToken.js";
+import { NODE_ENV } from "../config/env.js";
 
 const getUserByEmail = async (email) => {
   const student = await findStudentByEmail(email);
@@ -51,10 +52,23 @@ export const getUser = asyncHandler(async (req, res) => {
   }
 
   // `req.user` already populated in protect middleware
-  res.status(200).json({user: {
+  res.status(200).json({
+    user: {
       id: req.user.id,
       name: req.user.name,
       role: req.user.role,
-    }});
+    }
+  });
 });
 
+//logout user
+export const logout = asyncHandler(async (req, res) => {
+  // clear cookies
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: NODE_ENV === "production",
+    sameSite: NODE_ENV === "production" ? "none" : "strict",
+  });
+
+  res.status(200).json({ message: "Logged out successfully" });
+});
