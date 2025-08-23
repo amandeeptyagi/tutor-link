@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 //auth provider created
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const fetchUser = async () => {
         try {
@@ -16,6 +17,8 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.warn('User not logged in:', error.message);
             setUser(null);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -25,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, setUser, loading }}>
             {children}
         </AuthContext.Provider>
     )
