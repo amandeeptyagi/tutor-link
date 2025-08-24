@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
-import { findStudentByEmail, findTeacherByEmail, findAdminByEmail } from "../queries/loginQueries.js";
+import { findStudentByEmail, findTeacherByEmail, findAdminByEmail } from "../queries/authQueries.js";
 import generateToken from "../utils/generateToken.js";
 import { NODE_ENV } from "../config/env.js";
 

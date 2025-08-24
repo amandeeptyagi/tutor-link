@@ -1,15 +1,24 @@
 import { AuthProvider } from './contexts/authContext'
+import { BrowserRouter as Router, Routes } from 'react-router-dom';
+
+import PublicRoutes from "@/routes/publicRoutes";
+import AdminRoutes from "@/routes/adminRoutes";
+import TeacherRoutes from "@/routes/teacherRoutes";
+import StudentRoutes from "@/routes/studentRoutes";
 
 function App() {
 
   return (
-    <>
     <AuthProvider>
-      <p className='text-white'>
-        This is frontend made with React
-      </p>
+      <Router>
+        <Routes>
+          {PublicRoutes}
+          {AdminRoutes}
+          {TeacherRoutes}
+          {StudentRoutes}
+        </Routes>
+      </Router>
     </AuthProvider>
-    </>
   )
 }
 
