@@ -1,5 +1,6 @@
 import { logout } from "@/services/authApi";
 import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 const AdminDashboard = () => {
   const { setUser } = useAuth();
@@ -16,8 +17,10 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-      <button onClick={handleLogout} className="border-2 border-black">Logout</button>
+      <section className="text-center py-16">
+        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+        <Button onClick={handleLogout} className="mt-10 hover:cursor-pointer">Logout</Button>
+      </section>
     </div>
   )
 }
