@@ -1,6 +1,8 @@
 import { AuthProvider } from './contexts/authContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import MainLayout from './components/layout/MainLayout';
+
 import PublicRoutes from "@/routes/publicRoutes";
 import AdminRoutes from "@/routes/adminRoutes";
 import TeacherRoutes from "@/routes/teacherRoutes";
@@ -12,14 +14,16 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          {PublicRoutes}
-          {AdminRoutes}
-          {TeacherRoutes}
-          {StudentRoutes}
-          {/* Fallback Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <MainLayout>
+          <Routes>
+            {PublicRoutes}
+            {AdminRoutes}
+            {TeacherRoutes}
+            {StudentRoutes}
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </MainLayout>
       </Router>
     </AuthProvider>
   )
