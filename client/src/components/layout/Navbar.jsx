@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { logout } from "@/services/authApi";
 
 const Navbar = ({ onMenuClick }) => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   // role specific links
   const studentLinks = [
@@ -27,10 +27,10 @@ const Navbar = ({ onMenuClick }) => {
     user?.role === "student"
       ? studentLinks
       : user?.role === "teacher"
-      ? teacherLinks
-      : user?.role === "admin"
-      ? adminLinks
-      : [];
+        ? teacherLinks
+        : user?.role === "admin"
+          ? adminLinks
+          : [];
 
   const handleLogout = async () => {
     try {
@@ -43,51 +43,57 @@ const Navbar = ({ onMenuClick }) => {
   };
 
   return (
-    <nav className="w-full bg-gray-400 shadow px-6 py-3 flex items-center justify-between sticky top-0">
+    <nav className="w-full bg-gray-400 shadow px-6 lg:px-20 py-3 flex items-center justify-between sticky top-0">
       {/* Logo */}
       <Link to="/" className="text-xl font-bold text-indigo-600">
         TutorLink
       </Link>
 
       {/* Right Side */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-1 flex-row-reverse lg:flex-row items-center justify-between gap-4">
         {!user ? (
           <>
-            <Link to="/contact">Contact Us</Link>
-            <Link to="/about">About</Link>
-            <Link to="/login">
-              <Button variant="outline">Login</Button>
-            </Link>
-            <Link to="/register-student">
-              <Button>Sign Up</Button>
-            </Link>
+            <div className="hidden lg:flex items-center gap-3 ml-20">
+              <Link to="/contact">Contact Us</Link>
+              <Link to="/about">About</Link>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-3">
+              <Link to="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link to="/register-student">
+                <Button variant="outline">Sign Up</Button>
+              </Link>
+            </div>
           </>
         ) : (
           <>
-            <nav className="hidden lg:flex gap-3">
+            <div className="hidden lg:flex items-center gap-3 ml-20">
               {links.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="p-2 rounded hover:bg-gray-100"
+                  className="rounded hover:bg-gray-100"
                 >
                   {link.label}
                 </Link>
               ))}
-            </nav>
+            </div>
 
             <Button variant="outline" onClick={handleLogout} className="hidden lg:block">
               Logout
             </Button>
-            
-            <button
-              onClick={onMenuClick}
-              className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
+
           </>
         )}
+
+        <button
+          onClick={onMenuClick}
+          className="px-2 h-9 rounded-md hover:bg-gray-100 lg:hidden"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
       </div>
     </nav>
   );
