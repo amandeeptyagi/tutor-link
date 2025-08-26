@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logout } from "@/services/authApi";
 
 const Sidebar = ({ open, onClose }) => {
   const { user, setUser } = useAuth();
@@ -58,15 +59,15 @@ const Sidebar = ({ open, onClose }) => {
         <>
           <div className="flex flex-col flex-1 justify-between">
             <div className="flex flex-col gap-3 p-4 px-6">
-              <Link to="/contact">Contact Us</Link>
-              <Link to="/about">About</Link>
+              <Link to="/contact" onClick={onClose}>Contact Us</Link>
+              <Link to="/about" onClick={onClose}>About</Link>
             </div>
             <div className="w-full flex flex-col gap-3 p-2 px-6">
               <Link to="/login">
-                <Button variant="outline" className="w-full">Login</Button>
+                <Button variant="outline" className="w-full" onClick={onClose}>Login</Button>
               </Link>
               <Link to="/register-student">
-                <Button className="w-full">Sign Up</Button>
+                <Button className="w-full" onClick={onClose}>Sign Up</Button>
               </Link>
             </div>
           </div>
@@ -87,7 +88,7 @@ const Sidebar = ({ open, onClose }) => {
               ))}
             </div>
             <div className="w-full flex flex-col gap-3 p-2 px-6">
-              <Button variant="outline" onClick={handleLogout} className="bg-red-200">
+              <Button variant="outline" onClick={() => {handleLogout(); onClose();}} className="bg-red-200 h-13">
                 Logout
               </Button>
             </div>
