@@ -58,24 +58,40 @@ export const updateStudentProfile = async (id, data) => {
 
 // Teacher Search
 export const searchTeachers = async (query) => {
-  let q = `SELECT id, name, phone, profile_photo, gender, mode, street, city, state, pincode, location,
-           subjects, class_from, class_to, timing, institute_name, is_verified, role, created_at, updated_at
-    FROM teachers
-    WHERE is_verified = true`;
+  let q = `
+    SELECT t.id, t.name, t.phone, t.profile_photo, t.gender, t.mode, t.street, t.city, 
+           t.state, t.pincode, t.location, t.subjects, t.class_from, t.class_to, 
+           t.timing, t.institute_name, t.is_verified, t.role, t.created_at, t.updated_at,
+           COALESCE(AVG(r.rating), 0) as avg_rating
+    FROM teachers t
+    LEFT JOIN ratings r ON r.teacher_id = t.id
+    WHERE t.is_verified = true
+  `;
   const values = [];
   let i = 1;
 
-  if (query.city) q += ` AND city ILIKE $${i++}`, values.push(`%${query.city}%`);
-  if (query.pincode) q += ` AND pincode = $${i++}`, values.push(query.pincode);
-  if (query.subject) q += ` AND $${i++} = ANY(subjects)`, values.push(query.subject);
-  if (query.gender) q += ` AND gender = $${i++}`, values.push(query.gender);
-  if (query.mode) q += ` AND $${i++} = ANY(mode)`, values.push(query.mode);
-  if (query.classFrom) q += ` AND class_to >= $${i++}`, values.push(query.classFrom);
-  if (query.classTo) q += ` AND class_from <= $${i++}`, values.push(query.classTo);
+  if (query.city) { q += ` AND t.city ILIKE $${i++}`; values.push(`%${query.city}%`); }
+  if (query.pincode) { q += ` AND t.pincode = $${i++}`; values.push(query.pincode); }
+  if (query.subject) { q += ` AND $${i++} = ANY(t.subjects)`; values.push(query.subject); }
+  if (query.gender) { q += ` AND t.gender = $${i++}`; values.push(query.gender); }
+  if (query.mode) { q += ` AND $${i++} = ANY(t.mode)`; values.push(query.mode); }
+  if (query.class) {
+    q += ` AND t.class_from <= $${i} AND t.class_to >= $${i}`;
+    values.push(query.class);
+    i++;
+  }
+
+  q += ` GROUP BY t.id`;
+
+  if (query.rating) {
+    q += ` HAVING AVG(r.rating) >= $${i++}`;
+    values.push(query.rating);
+  }
 
   const result = await pool.query(q, values);
   return result.rows;
 };
+
 
 export const getTeacherById = async (id) => {
   const result = await pool.query(`SELECT id, name, phone, profile_photo, gender, mode, street, city, state, pincode, location, subjects, class_from, class_to, timing, institute_name, is_verified, role, created_at, updated_at

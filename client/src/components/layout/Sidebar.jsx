@@ -10,6 +10,7 @@ const Sidebar = ({ open, onClose }) => {
   // role specific links
   const studentLinks = [
     { to: "/student/dashboard", label: "Dashboard" },
+    { to: "/student/teachers", label: "Teachers" },
     { to: "/student/subscriptions", label: "My Subscriptions" },
   ];
 
@@ -64,10 +65,10 @@ const Sidebar = ({ open, onClose }) => {
             </div>
             <div className="w-full flex flex-col gap-3 p-2 px-6">
               <Link to="/login">
-                <Button variant="outline" className="w-full" onClick={onClose}>Login</Button>
+                <Button variant="outline" className="w-full h-13" onClick={onClose}>Login</Button>
               </Link>
               <Link to="/register-student">
-                <Button className="w-full" onClick={onClose}>Sign Up</Button>
+                <Button className="w-full h-13" onClick={onClose}>Sign Up</Button>
               </Link>
             </div>
           </div>
@@ -80,7 +81,7 @@ const Sidebar = ({ open, onClose }) => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="p-2 rounded hover:bg-gray-100"
+                  className="p-2 rounded hover:bg-gray-100 border-b"
                   onClick={onClose}
                 >
                   {link.label}
@@ -88,7 +89,7 @@ const Sidebar = ({ open, onClose }) => {
               ))}
             </div>
             <div className="w-full flex flex-col gap-3 p-2 px-6">
-              <Button variant="outline" onClick={() => {handleLogout(); onClose();}} className="bg-red-200 h-13">
+              <Button variant="outline" onClick={() => { handleLogout(); onClose(); }} className="bg-red-200 h-13">
                 Logout
               </Button>
             </div>
