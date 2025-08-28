@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 const SubscriptionsPage = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("approved"); 
 
   // Fetch subscriptions
   useEffect(() => {
@@ -37,49 +38,65 @@ const SubscriptionsPage = () => {
   if (loading) return <p className="text-center">Loading subscriptions...</p>;
   if (!subscriptions.length) return <p className="text-center text-gray-500">No subscriptions yet.</p>;
 
-  // Grouping by status
-  const pending = subscriptions.filter((s) => s.status === "pending");
-  const approved = subscriptions.filter((s) => s.status === "approved");
-  const rejected = subscriptions.filter((s) => s.status === "rejected");
-
-  const renderList = (list, title, color) => (
-    <div className="mb-8">
-      <h2 className={`text-xl font-semibold mb-4 ${color}`}>{title}</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {list.map((sub) => (
-          <Card key={sub.id} className="shadow-md">
-            <CardContent className="p-4 flex flex-col items-center">
-              <img
-                src={sub.teacher?.profile_photo || "https://placehold.co/80x80/orange/white"}
-                alt={sub.teacher?.name}
-                className="w-20 h-20 rounded-full object-cover mb-3"
-              />
-              <h3 className="text-lg font-semibold">{sub.teacher?.name}</h3>
-              <p className="text-sm text-gray-600">{sub.teacher?.email}</p>
-              <p className="text-xs text-gray-500 mt-1">Status: {sub.status}</p>
-
-              <Button
-                variant="destructive"
-                size="sm"
-                className="mt-3"
-                onClick={() => handleCancel(sub.id)}
-              >
-                Cancel
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+  // Group by status
+  const filtered = subscriptions.filter((s) => s.status === activeTab);
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">My Subscriptions</h1>
 
-      {approved.length > 0 && renderList(approved, "Subscribed", "text-green-600")}
-      {pending.length > 0 && renderList(pending, "Requested", "text-yellow-600")}
-      {rejected.length > 0 && renderList(rejected, "Rejected", "text-red-600")}
+      {/* Tabs */}
+      <div className="flex gap-3 mb-6">
+        <Button
+          variant={activeTab === "approved" ? "default" : "outline"}
+          onClick={() => setActiveTab("approved")}
+        >
+          Subscribed
+        </Button>
+        <Button
+          variant={activeTab === "pending" ? "default" : "outline"}
+          onClick={() => setActiveTab("pending")}
+        >
+          Pending
+        </Button>
+        <Button
+          variant={activeTab === "rejected" ? "default" : "outline"}
+          onClick={() => setActiveTab("rejected")}
+        >
+          Rejected
+        </Button>
+      </div>
+
+      {/* List */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filtered.length > 0 ? (
+          filtered.map((sub) => (
+            <Card key={sub.id} className="shadow-md">
+              <CardContent className="p-4 flex flex-col items-center">
+                <img
+                  src={sub.teacher?.profile_photo || "https://placehold.co/80x80/orange/white"}
+                  alt={sub.teacher?.name}
+                  className="w-20 h-20 rounded-full object-cover mb-3"
+                />
+                <h3 className="text-lg font-semibold">{sub.teacher?.name}</h3>
+                <p className="text-sm text-gray-600">{sub.teacher?.email}</p>
+                <p className="text-xs text-gray-500 mt-1">Status: {sub.status}</p>
+
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="mt-3"
+                  onClick={() => handleCancel(sub.id)}
+                >
+                  Cancel
+                </Button>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full">No {activeTab} subscriptions.</p>
+        )}
+      </div>
     </div>
   );
 };
