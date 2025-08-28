@@ -48,7 +48,7 @@ export const updateStudentProfile = async (id, data) => {
     `UPDATE students 
      SET name = $1, email = $2, phone = $3, profile_photo = $4, address = $5, updated_at = CURRENT_TIMESTAMP
      WHERE id = $6 
-     RETURNING id, name, email, phone, profile_photo, address, favourites, subscribed_teachers, role, created_at, updated_at`,
+     RETURNING id, name, email, phone, profile_photo, address, role, created_at, updated_at`,
     [name, email, phone, profile_photo, address, id]
   );
 

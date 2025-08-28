@@ -10,8 +10,10 @@ const Navbar = ({ onMenuClick }) => {
   // role specific links
   const studentLinks = [
     { to: "/student/dashboard", label: "Dashboard" },
-    { to: "/student/teachers", label: "Teachers" },
-    { to: "/student/subscriptions", label: "My Subscriptions" },
+    { to: "/student/teachers", label: "Search Teachers" },
+    { to: "/student/profile", label: "Profile" },
+    { to: "/student/favourites", label: "Favourites" },
+    { to: "/student/subscriptions", label: "Subscriptions" },
   ];
 
   const teacherLinks = [
@@ -44,7 +46,7 @@ const Navbar = ({ onMenuClick }) => {
   };
 
   return (
-    <nav className="w-full bg-gray-400 shadow px-6 lg:px-20 py-3 flex items-center justify-between sticky top-0">
+    <nav className="z-1 w-full bg-gray-400 shadow px-6 lg:px-20 py-3 flex items-center justify-between sticky top-0">
       {/* Logo */}
       <Link to="/" className="text-xl font-bold text-indigo-600">
         TutorLink

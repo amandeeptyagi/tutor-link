@@ -10,8 +10,10 @@ const Sidebar = ({ open, onClose }) => {
   // role specific links
   const studentLinks = [
     { to: "/student/dashboard", label: "Dashboard" },
-    { to: "/student/teachers", label: "Teachers" },
-    { to: "/student/subscriptions", label: "My Subscriptions" },
+    { to: "/student/teachers", label: "Search Teachers" },
+    { to: "/student/profile", label: "Profile" },
+    { to: "/student/favourites", label: "Favourites" },
+    { to: "/student/subscriptions", label: "Subscriptions" },
   ];
 
   const teacherLinks = [
@@ -45,7 +47,7 @@ const Sidebar = ({ open, onClose }) => {
 
   return (
     <aside
-      className={`flex flex-col fixed top-0 right-0 h-full w-full shadow-md bg-white transform transition-transform duration-300
+      className={`z-2 flex flex-col fixed top-0 right-0 h-full w-full shadow-md bg-white transform transition-transform duration-300
         ${open ? "translate-x-0" : "translate-x-full"}`}
     >
       {/* Close Button for mobile */}
