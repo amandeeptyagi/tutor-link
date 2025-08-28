@@ -186,14 +186,25 @@ export const requestSubscription = async (studentId, teacherId) => {
 
 export const getSubscriptions = async (studentId) => {
   const result = await pool.query(
-    `SELECT s.*, t.name AS teacher_name
+    `SELECT 
+        s.id,
+        s.status,
+        s.created_at,
+        s.updated_at,
+        json_build_object(
+          'id', t.id,
+          'name', t.name,
+          'profile_photo', t.profile_photo
+        ) AS teacher
      FROM subscriptions s
      JOIN teachers t ON s.teacher_id = t.id
-     WHERE s.student_id = $1`,
+     WHERE s.student_id = $1
+     ORDER BY s.created_at DESC`,
     [studentId]
   );
   return result.rows;
 };
+
 
 export const cancelSubscription = async (subscriptionId, studentId) => {
   await pool.query(

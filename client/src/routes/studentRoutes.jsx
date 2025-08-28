@@ -5,6 +5,7 @@ import StudentDashboard from "@/pages/student/StudentDashboard";
 import TeacherList from "@/pages/student/TeacherList";
 import StudentProfile from "@/pages/student/StudentProfile";
 import FavouritesPage from "@/pages/student/FavouritesPage";
+import SubscriptionsPage from "@/pages/student/SubscriptionsPage";
 
 const StudentRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
@@ -12,6 +13,7 @@ const StudentRoutes = (
     <Route path="/student/teachers" element={<TeacherList />} />
     <Route path="/student/profile" element={<StudentProfile />} />
     <Route path="/student/favourites" element={<FavouritesPage />} />
+    <Route path="/student/subscriptions" element={<SubscriptionsPage />} />
   </Route>
 );
 
