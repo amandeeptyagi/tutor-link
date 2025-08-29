@@ -2,11 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/common/StarRating";
-import { searchTeachers, getSubscriptionStatus, requestSubscription } from "@/services/studentApi";
+import { 
+  searchTeachers, 
+  getSubscriptionStatus, 
+  requestSubscription, 
+  getFavouriteTeachers,
+  addFavouriteTeacher,
+  removeFavouriteTeacher
+ } from "@/services/studentApi";
+import { Heart } from "lucide-react";
 
 export default function TeacherList() {
   const [teachers, setTeachers] = useState([]);
   const [subscriptions, setSubscriptions] = useState({});
+  const [favourites, setFavourites] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -69,6 +78,49 @@ export default function TeacherList() {
       }));
     } catch (err) {
       console.error("Subscription failed", err);
+    }
+  };
+
+  
+  // fetch subscriptions separately
+  useEffect(() => {
+    const fetchFavourites = async () => {
+      try {
+        const res = await getFavouriteTeachers();
+        // map favourite teachers into { teacherId: true }
+        const favMap = {};
+        res.data.forEach((fav) => {
+          favMap[fav.id] = true;
+        });
+        setFavourites(favMap);
+      } catch (err) {
+        console.error("Failed to load favourites", err);
+      }
+    };
+
+    fetchFavourites();
+  }, []);
+
+  // Toggle favourite
+  const toggleFavourite = async (teacherId) => {
+    try {
+      if (favourites[teacherId]) {
+        // already liked -> remove
+        await removeFavouriteTeacher(teacherId);
+        setFavourites((prev) => {
+          const updated = { ...prev };
+          delete updated[teacherId];
+          return updated;
+        });
+        toast.success("Removed from favourites");
+      } else {
+        // not liked -> add
+        await addFavouriteTeacher(teacherId);
+        setFavourites((prev) => ({ ...prev, [teacherId]: true }));
+        toast.success("Added to favourites");
+      }
+    } catch (err) {
+      toast.error("Failed to update favourite");
     }
   };
 
@@ -151,7 +203,16 @@ export default function TeacherList() {
             const sub = subscriptions[t.id]; // check subscription for this teacher
             return (
               <Card key={t.id} className="shadow-md hover:shadow-lg transition rounded-2xl">
-                <CardContent className="p-4 flex flex-col items-center">
+                <CardContent className="p-4 flex flex-col items-center relative">
+                  {/* like button */}
+                <button 
+                  className="absolute top-[-10px] right-4 hover:cursor-pointer"
+                  onClick={() => toggleFavourite(t.id)}
+                >
+                  <Heart 
+                    className={`w-6 h-6 ${favourites[t.id] ? "fill-pink-500 text-pink-500" : "fill-gray-100 text-gray-400"}`} 
+                  />
+                </button>
                   <img
                     src={t.profile_photo || "https://placehold.co/80x80/orange/white"}
                     alt={t.name}
@@ -163,20 +224,20 @@ export default function TeacherList() {
 
                   <p>{t.city || "N/A"}, {t.state || ""}</p>
                   <div className="flex justify-between mt-4 w-full gap-2">
-                    <Button className="flex-1 h-full">View Profile</Button>
+                    <Button className="flex-1">View Profile</Button>
 
                     {sub ? (
                       <Button
-                        className={`flex-1 break-words whitespace-normal h-full
+                        className={`flex-1 text-xs overflow-hidden
                             ${sub.status === "approved"
-                            ? "bg-red-500"
+                            ? "bg-green-500"
                             : sub.status === "pending"
                               ? "bg-yellow-500"
                               : sub.status === "rejected"
                                 ? "bg-gray-500"
                                 : "bg-gray-300"
                           }`}
-                        disabled
+                          disabled
                       >
                         {sub.status === "approved"
                           ? "Subscribed"
@@ -190,7 +251,8 @@ export default function TeacherList() {
 
                     ) : (
                       <Button
-                        className="flex-1"
+                        variant="outline"
+                        className="flex-1 border-red-500 border-2 text-red-500"
                         onClick={() => handleSubscribe(t.id)}
                       >
                         Subscribe
