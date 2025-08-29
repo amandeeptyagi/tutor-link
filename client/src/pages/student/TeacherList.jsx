@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/common/StarRating";
@@ -37,7 +38,6 @@ export default function TeacherList() {
         setLoading(true);
         const response = await searchTeachers(filters);
         setTeachers(Array.isArray(response.data) ? response.data : []);
-
       } catch (err) {
         setError("Failed to load teachers");
       } finally {

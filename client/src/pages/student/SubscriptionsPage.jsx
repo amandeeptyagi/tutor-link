@@ -4,33 +4,52 @@ import {
   cancelSubscription,
   getFavouriteTeachers,
   addFavouriteTeacher,
-  removeFavouriteTeacher
+  removeFavouriteTeacher,
+  rateTeacher,
+  getTeacherRatings
 } from "@/services/studentApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
 import { Heart } from "lucide-react";
+import StarRating from "@/components/common/StarRating";
 
 const SubscriptionsPage = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("approved");
   const [favourites, setFavourites] = useState({});
+  const [ratings, setRatings] = useState({});
 
-  // Fetch subscriptions
-  useEffect(() => {
-    const fetchSubscriptions = async () => {
-      try {
-        const res = await getSubscriptionStatus();
-        setSubscriptions(res.data || []);
-      } catch (err) {
-        toast.error("Failed to load subscriptions");
-      } finally {
-        setLoading(false);
+// Fetch subscriptions and ratings
+useEffect(() => {
+  const fetchSubscriptionsAndRatings = async () => {
+    try {
+      const subRes = await getSubscriptionStatus();
+      const subs = subRes.data || [];
+
+      const ratingMap = {};
+      for (const sub of subs) {
+        try {
+          const rateRes = await getTeacherRatings(sub.teacher.id);
+          ratingMap[sub.teacher.id] = rateRes.data.ratings[0]?.rating || 0;
+        } catch {
+          ratingMap[sub.teacher.id] = 0;
+        }
       }
-    };
-    fetchSubscriptions();
-  }, []);
+
+      setSubscriptions(subs);
+      setRatings(ratingMap);
+    } catch (err) {
+      toast.error("Failed to load subscriptions or ratings");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchSubscriptionsAndRatings();
+}, []);
+
 
   // Cancel subscription
   const handleCancel = async (id) => {
@@ -43,7 +62,7 @@ const SubscriptionsPage = () => {
     }
   };
 
-  // fetch subscriptions separately
+  // fetch favourites separately
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
@@ -124,12 +143,12 @@ const SubscriptionsPage = () => {
             <Card key={sub.id} className="shadow-md">
               <CardContent className="p-4 flex flex-col items-center relative">
                 {/* like button */}
-                <button 
+                <button
                   className="absolute top-[-10px] right-4 hover:cursor-pointer"
                   onClick={() => toggleFavourite(sub.teacher.id)}
                 >
-                  <Heart 
-                    className={`w-6 h-6 ${favourites[sub.teacher.id] ? "fill-pink-500 text-pink-500" : "fill-gray-100 text-gray-400"}`} 
+                  <Heart
+                    className={`w-6 h-6 ${favourites[sub.teacher.id] ? "fill-pink-500 text-pink-500" : "fill-gray-100 text-gray-400"}`}
                   />
                 </button>
                 <img
@@ -138,7 +157,22 @@ const SubscriptionsPage = () => {
                   className="w-20 h-20 rounded-full object-cover mb-3"
                 />
                 <h3 className="text-lg font-semibold">{sub.teacher?.name}</h3>
-                <p className="text-sm text-gray-600">{sub.teacher?.email}</p>
+                {activeTab === "approved" ? (
+                <StarRating
+                  rating={ratings[sub.teacher.id] || 0}
+                  interactive={true}
+                  onRate={async (value) => {
+                    try {
+                      await rateTeacher(sub.teacher.id, value);
+                      setRatings((prev) => ({ ...prev, [sub.teacher.id]: value }));
+                      toast.success(`You rated ${value} stars!`);
+                    } catch {
+                      toast.error("Failed to rate teacher");
+                    }
+                  }}
+                /> ) : (
+                <StarRating rating={ratings[sub.teacher.id] || 0} />
+                )}
                 <p className="text-xs text-gray-500 mt-1">Status: {sub.status}</p>
                 <div className="flex justify-between mt-4 w-full gap-2">
                   <Button className="flex-1">View Profile</Button>

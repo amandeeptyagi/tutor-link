@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
 import { Trash, Heart } from "lucide-react";
+import StarRating from "@/components/common/StarRating";
 
 const FavouritesPage = () => {
     const [favourites, setFavourites] = useState([]);
@@ -99,20 +100,16 @@ const FavouritesPage = () => {
 
                                 {/* Teacher Info */}
                                 <h2 className="font-semibold text-lg mt-4 mb-2">{teacher.name}</h2>
+                                 {/* Star Rating component */}
+                  <StarRating rating={teacher.avg_rating} />
                                 {teacher.subjects && (
-                                    <p>{teacher.subjects}</p>
+                                    <p>{teacher.subjects.join(', ')}</p>
                                 )}
 
                                 {/* Actions */}
                                 <div className="mt-4 flex items-center gap-2 w-full justify-between">
                                     <Button className="flex-1">View Profile</Button>
-                                    {/* <Button
-                                    variant="destructive"
-                                    onClick={() => handleRemove(teacher.id)}
-                                    className="flex flex-1 items-center gap-2"
-                                >
-                                    <Trash size={14} /> Remove
-                                </Button> */}
+                                    
                                     {sub ? (
                                         <Button
                                             className={`flex-1 text-xs overflow-hidden

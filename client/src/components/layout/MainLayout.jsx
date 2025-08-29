@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
+import { Toaster } from "react-hot-toast";
 
 const MainLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -17,6 +18,18 @@ const MainLayout = ({ children }) => {
         {/* Sidebar */}
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </div>
+
+      {/* Toast notifications */}
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#fff",
+            color: "#333",
+          },
+        }}
+      />
     </div>
   );
 };

@@ -137,13 +137,18 @@ export const removeFavouriteTeacher = async (studentId, teacherId) => {
 
 export const getFavouriteTeachers = async (studentId) => {
   const result = await pool.query(
-    `SELECT id, name, phone, profile_photo, gender, mode, street, city, state, pincode, location,
-           subjects, class_from, class_to, timing, institute_name, is_verified, role, created_at, updated_at
-    FROM teachers
-     WHERE
-     id = ANY (
+    `SELECT t.id, t.name, t.phone, t.profile_photo, t.gender, t.mode, 
+            t.street, t.city, t.state, t.pincode, t.location,
+            t.subjects, t.class_from, t.class_to, t.timing, 
+            t.institute_name, t.is_verified, t.role, 
+            t.created_at, t.updated_at,
+            COALESCE(AVG(r.rating), 0) as avg_rating
+     FROM teachers t
+     LEFT JOIN ratings r ON r.teacher_id = t.id
+     WHERE t.id = ANY (
        SELECT teacher_id FROM favourite_teachers WHERE student_id = $1
-     )`,
+     )
+     GROUP BY t.id`,
     [studentId]
   );
   return result.rows;
@@ -247,13 +252,17 @@ export const rateTeacher = async (studentId, teacherId, rating) => {
   }
 };
 
-export const getTeacherRatings = async (teacherId) => {
+export const getTeacherRatings = async (teacherId, studentId) => {
   const result = await pool.query(
-    `SELECT rating, created_at FROM ratings WHERE teacher_id = $1 ORDER BY created_at DESC`,
-    [teacherId]
+    `SELECT rating, created_at 
+     FROM ratings 
+     WHERE teacher_id = $1 AND student_id = $2
+     ORDER BY created_at DESC`,
+    [teacherId, studentId]
   );
   return result.rows;
 };
+
 
 // teacher gallery images
 export const getGalleryImages = async (teacherId) => {

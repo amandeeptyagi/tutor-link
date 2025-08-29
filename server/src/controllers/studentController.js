@@ -128,7 +128,8 @@ export const rateTeacher = asyncHandler(async (req, res) => {
 });
 
 export const getTeacherRatings = asyncHandler(async (req, res) => {
-  const ratings = await StudentQuery.getTeacherRatings(req.params.teacherId);
+  const studentId = req.user.id;
+  const ratings = await StudentQuery.getTeacherRatings(req.params.teacherId, studentId);
   res.json({ success: true, ratings });
 });
 
