@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
 import { Heart } from "lucide-react";
 import StarRating from "@/components/common/StarRating";
+import { Link } from "react-router-dom";
 
 const SubscriptionsPage = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -176,7 +177,7 @@ useEffect(() => {
                 )}
                 <p className="text-xs text-gray-500 mt-1">Status: {sub.status}</p>
                 <div className="flex justify-between mt-4 w-full gap-2">
-                  <Button className="flex-1">View Profile</Button>
+                  <Button className="flex-1" asChild><Link to={`/student/teacher/${sub.teacher.id}`}>View Profile</Link></Button>
                   <Button
                     variant="destructive"
                     className="text-xs"

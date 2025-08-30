@@ -12,6 +12,7 @@ import {
   removeFavouriteTeacher
 } from "@/services/studentApi";
 import { Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function TeacherList() {
   const [teachers, setTeachers] = useState([]);
@@ -229,7 +230,7 @@ export default function TeacherList() {
 
                   <p>{t.city || "N/A"}, {t.state || ""}</p>
                   <div className="flex justify-between mt-4 w-full gap-2">
-                    <Button className="flex-1">View Profile</Button>
+                    <Button className="flex-1" asChild><Link to={`/student/teacher/${t.id}`}>View Profile</Link></Button>
 
                     {sub ? (
                       <Button
