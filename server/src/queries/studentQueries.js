@@ -107,10 +107,20 @@ export const searchTeachers = async (query) => {
 
 
 export const getTeacherById = async (id) => {
-  const result = await pool.query(`SELECT id, name, phone, profile_photo, gender, mode, street, city, state, pincode, location, subjects, class_from, class_to, timing, institute_name, is_verified, role, created_at, updated_at
-  FROM teachers 
-  WHERE 
-  id = $1 AND is_verified = true`, [id]);
+  const result = await pool.query(
+    `SELECT t.id, t.name, t.phone, t.profile_photo, t.gender, t.mode, 
+            t.street, t.city, t.state, t.pincode, t.location,
+            t.subjects, t.class_from, t.class_to, t.timing, 
+            t.institute_name, t.is_verified, t.role, 
+            t.created_at, t.updated_at,
+            COALESCE(AVG(r.rating), 0) AS avg_rating,
+            COUNT(r.rating) AS review_count
+     FROM teachers t
+     LEFT JOIN ratings r ON r.teacher_id = t.id
+     WHERE t.id = $1 AND t.is_verified = true
+     GROUP BY t.id`,
+    [id]
+  );
   return result.rows[0];
 };
 

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
 import { Trash, Heart } from "lucide-react";
 import StarRating from "@/components/common/StarRating";
+import { Link } from "react-router-dom";
 
 const FavouritesPage = () => {
     const [favourites, setFavourites] = useState([]);
@@ -111,7 +112,7 @@ const FavouritesPage = () => {
 
                                 {/* Actions */}
                                 <div className="mt-4 flex items-center gap-2 w-full justify-between">
-                                    <Button className="flex-1">View Profile</Button>
+                                    <Button className="flex-1" asChild><Link to={`/student/teacher/${teacher.id}`}>View Profile</Link></Button>
 
                                     {sub ? (
                                         <Button
