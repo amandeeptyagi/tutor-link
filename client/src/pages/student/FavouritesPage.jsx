@@ -50,6 +50,7 @@ const FavouritesPage = () => {
                 setSubscriptions(subsMap);
             } catch (err) {
                 console.error("Failed to load subscriptions", err);
+                 toast.error("Failed to load subscriptions");
             }
         };
 
@@ -65,8 +66,10 @@ const FavouritesPage = () => {
                 ...prev,
                 [teacherId]: { status: "pending", teacher: { id: teacherId } },
             }));
+                  toast.success("Subscription request sent");
         } catch (err) {
             console.error("Subscription failed", err);
+                  toast.error("Failed to subscribe");
         }
     };
 
@@ -100,16 +103,16 @@ const FavouritesPage = () => {
 
                                 {/* Teacher Info */}
                                 <h2 className="font-semibold text-lg mt-4 mb-2">{teacher.name}</h2>
-                                 {/* Star Rating component */}
-                  <StarRating rating={teacher.avg_rating} />
-                                {teacher.subjects && (
+                                {/* Star Rating component */}
+                                <StarRating rating={teacher.avg_rating} />
+                                {teacher.subjects ? (
                                     <p>{teacher.subjects.join(', ')}</p>
-                                )}
+                                ): <p>N/A</p> }
 
                                 {/* Actions */}
                                 <div className="mt-4 flex items-center gap-2 w-full justify-between">
                                     <Button className="flex-1">View Profile</Button>
-                                    
+
                                     {sub ? (
                                         <Button
                                             className={`flex-1 text-xs overflow-hidden

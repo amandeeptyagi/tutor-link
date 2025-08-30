@@ -75,6 +75,7 @@ useEffect(() => {
         setFavourites(favMap);
       } catch (err) {
         console.error("Failed to load favourites", err);
+              toast.error("Failed to load favourites");
       }
     };
 

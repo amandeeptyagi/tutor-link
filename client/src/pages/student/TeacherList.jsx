@@ -3,14 +3,14 @@ import { toast } from "react-hot-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/common/StarRating";
-import { 
-  searchTeachers, 
-  getSubscriptionStatus, 
-  requestSubscription, 
+import {
+  searchTeachers,
+  getSubscriptionStatus,
+  requestSubscription,
   getFavouriteTeachers,
   addFavouriteTeacher,
   removeFavouriteTeacher
- } from "@/services/studentApi";
+} from "@/services/studentApi";
 import { Heart } from "lucide-react";
 
 export default function TeacherList() {
@@ -40,6 +40,7 @@ export default function TeacherList() {
         setTeachers(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
         setError("Failed to load teachers");
+        toast.error("Failed to load teachers");
       } finally {
         setLoading(false);
       }
@@ -61,6 +62,7 @@ export default function TeacherList() {
         setSubscriptions(subsMap);
       } catch (err) {
         console.error("Failed to load subscriptions", err);
+        toast.error("Failed to load subscriptions");
       }
     };
 
@@ -76,13 +78,15 @@ export default function TeacherList() {
         ...prev,
         [teacherId]: { status: "pending", teacher: { id: teacherId } },
       }));
+      toast.success("Subscription request sent");
     } catch (err) {
       console.error("Subscription failed", err);
+      toast.error("Failed to subscribe");
     }
   };
 
-  
-  // fetch subscriptions separately
+
+  // fetch favourites separately
   useEffect(() => {
     const fetchFavourites = async () => {
       try {
@@ -95,6 +99,7 @@ export default function TeacherList() {
         setFavourites(favMap);
       } catch (err) {
         console.error("Failed to load favourites", err);
+        toast.error("Failed to load favourites");
       }
     };
 
@@ -205,14 +210,14 @@ export default function TeacherList() {
               <Card key={t.id} className="shadow-md hover:shadow-lg transition rounded-2xl">
                 <CardContent className="p-4 flex flex-col items-center relative">
                   {/* like button */}
-                <button 
-                  className="absolute top-[-10px] right-4 hover:cursor-pointer"
-                  onClick={() => toggleFavourite(t.id)}
-                >
-                  <Heart 
-                    className={`w-6 h-6 ${favourites[t.id] ? "fill-pink-500 text-pink-500" : "fill-gray-100 text-gray-400"}`} 
-                  />
-                </button>
+                  <button
+                    className="absolute top-[-10px] right-4 hover:cursor-pointer"
+                    onClick={() => toggleFavourite(t.id)}
+                  >
+                    <Heart
+                      className={`w-6 h-6 ${favourites[t.id] ? "fill-pink-500 text-pink-500" : "fill-gray-100 text-gray-400"}`}
+                    />
+                  </button>
                   <img
                     src={t.profile_photo || "https://placehold.co/80x80/orange/white"}
                     alt={t.name}
@@ -237,7 +242,6 @@ export default function TeacherList() {
                                 ? "bg-gray-500"
                                 : "bg-gray-300"
                           }`}
-                          disabled
                       >
                         {sub.status === "approved"
                           ? "Subscribed"
