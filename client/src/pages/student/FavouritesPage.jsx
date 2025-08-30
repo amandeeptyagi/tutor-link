@@ -134,8 +134,6 @@ const FavouritesPage = () => {
                                                         ? "Subscription Rejected"
                                                         : ""}
                                         </Button>
-
-
                                     ) : (
                                         <Button
                                             variant="outline"

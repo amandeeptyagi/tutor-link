@@ -42,16 +42,29 @@ export const getStudentById = async (id) => {
 };
 
 export const updateStudentProfile = async (id, data) => {
-  const { name, email, phone, profile_photo, address } = data;
+  const { name, email, phone, address } = data;
 
   const result = await pool.query(
     `UPDATE students 
-     SET name = $1, email = $2, phone = $3, profile_photo = $4, address = $5, updated_at = CURRENT_TIMESTAMP
-     WHERE id = $6 
-     RETURNING id, name, email, phone, profile_photo, address, role, created_at, updated_at`,
-    [name, email, phone, profile_photo, address, id]
+     SET name = $1, email = $2, phone = $3, address = $4, updated_at = CURRENT_TIMESTAMP
+     WHERE id = $5 
+     RETURNING id, name, email, phone, address, role, created_at, updated_at`,
+    [name, email, phone, address, id]
   );
 
+  return result.rows[0];
+};
+
+// update profile photo url
+export const updateStudentProfilePhoto = async (studentId, photoUrl) => {
+  const query = `
+    UPDATE students 
+    SET profile_photo = $1, updated_at = NOW() 
+    WHERE id = $2
+    RETURNING profile_photo;
+  `;
+  const values = [photoUrl, studentId];
+  const result = await pool.query(query, values);
   return result.rows[0];
 };
 

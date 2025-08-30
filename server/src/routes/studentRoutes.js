@@ -16,11 +16,13 @@ import {
     rateTeacher,
     getTeacherRatings,
     getTeacherGallery,
-    getResourcesIfSubscribed
+    getResourcesIfSubscribed,
+    uploadProfilePhoto 
 } from "../controllers/studentController.js";
 
 import { maintenanceMiddleware, allowRegistrationMiddleware } from "../middleware/maintenanceMiddleware.js"
 import { protect, allowRoles } from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -39,6 +41,9 @@ router.post("/change-password", changeStudentPassword)
 // PROFILE
 router.get("/profile", getStudentProfile)
 router.put("/profile", updateStudentProfile)
+
+//profile photo upload
+router.post("/profile/photo", upload.single("photo"), uploadProfilePhoto);
 
 // TEACHER SEARCH & VIEW
 router.get("/teachers", searchTeachers)

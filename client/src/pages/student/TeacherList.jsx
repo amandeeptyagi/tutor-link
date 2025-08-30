@@ -242,6 +242,7 @@ export default function TeacherList() {
                                 ? "bg-gray-500"
                                 : "bg-gray-300"
                           }`}
+                          disabled
                       >
                         {sub.status === "approved"
                           ? "Subscribed"
@@ -251,8 +252,6 @@ export default function TeacherList() {
                               ? "Subscription Rejected"
                               : ""}
                       </Button>
-
-
                     ) : (
                       <Button
                         variant="outline"

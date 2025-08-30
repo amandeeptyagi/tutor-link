@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
+import ProfilePhotoUploader from "@/components/common/ProfilePhotoUploader";
 
 const StudentProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -58,6 +59,13 @@ const StudentProfile = () => {
       {/* Profile Card */}
       <Card className="mb-6">
         <CardContent className="space-y-4">
+          {/* Profile Photo Upload Component */}
+          <div className="flex justify-center">
+            <ProfilePhotoUploader
+              currentPhoto={profile.profile_photo}
+              onUploadSuccess={(newUrl) => setProfile({ ...profile, profile_photo: newUrl })}
+            />
+          </div>
           <div>
             <label className="block text-sm">Name</label>
             <Input
