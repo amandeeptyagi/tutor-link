@@ -9,7 +9,6 @@ const Sidebar = ({ open, onClose }) => {
 
   // role specific links
   const studentLinks = [
-    { to: "/student/dashboard", label: "Dashboard" },
     { to: "/student/teachers", label: "Search Teachers" },
     { to: "/student/profile", label: "Profile" },
     { to: "/student/favourites", label: "Favourites" },

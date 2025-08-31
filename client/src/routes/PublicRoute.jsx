@@ -12,7 +12,7 @@ const PublicRoute = () => {
         //Redirect based on user role
         if (user.role === "admin") return <Navigate to="/admin/dashboard" replace />;
         if (user.role === "teacher") return <Navigate to="/teacher/dashboard" replace />;
-        if (user.role === "student") return <Navigate to="/student/dashboard" replace />;
+        if (user.role === "student") return <Navigate to="/student/teachers" replace />;
     }
 
     return <Outlet />;

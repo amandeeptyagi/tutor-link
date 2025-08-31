@@ -12,7 +12,9 @@ import {
   Globe,
   User,
   MessageCircle,
-  School
+  School,
+  ImageIcon,
+  File
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -110,12 +112,11 @@ const TeacherProfile = ({ teacherData }) => {
             <div className="flex flex-col md:flex-row gap-6">
               {/* Profile Section */}
               <div className="flex items-center gap-4">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={profile_photo} alt={name} />
-                  <AvatarFallback className="text-xl">
-                    {name?.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
+                <img
+                  src={profile_photo || "https://placehold.co/80x80/orange/white"}
+                  alt={name}
+                  className="w-20 h-20 rounded-full object-cover"
+                />
 
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -144,6 +145,24 @@ const TeacherProfile = ({ teacherData }) => {
                 >
                   <Phone className="h-4 w-4 mr-2" />
                   Call Now
+                </Button>
+                <Button
+                  size="sm"
+                  className="w-full md:w-auto"
+                  variant='outline'
+                  
+                >
+                  <ImageIcon className="h-4 w-4 mr-2" />
+                  Gallery
+                </Button>
+                <Button
+                  size="sm"
+                  className="w-full md:w-auto"
+                  variant='outline'
+                  
+                >
+                  <File className="h-4 w-4 mr-2" />
+                  Resources
                 </Button>
               </div>
             </div>
