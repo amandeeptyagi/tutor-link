@@ -1,4 +1,4 @@
-import { AuthProvider } from './contexts/authContext'
+import { AuthProvider } from './contexts/AuthContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import MainLayout from './components/layout/MainLayout';
