@@ -5,6 +5,10 @@ Students can search, subscribe, and rate teachers. Teachers manage profiles, res
 
 ---
 
+🔗 **Live App**: [View on Vercel](https://tutorlink100.vercel.app/)
+
+---
+
 ## Features
 
 - **Students**: Register/login, search teachers by location/subject/class/gender/mode, subscribe, rate, manage profile.
