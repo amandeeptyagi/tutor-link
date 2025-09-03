@@ -4,6 +4,6 @@ client/node_modules
 client/dist
 client/.env
 node_modules
-package-lock.json
-package.json
+/package-lock.json
+/package.json
 test1.js
