@@ -15,10 +15,12 @@ import {
   deleteSubscription,
   getTeacherRatings,
   getTeacherAnalytics,
+  uploadTeacherProfilePhoto,
 } from "../controllers/teacherController.js";
 
 import { maintenanceMiddleware, allowRegistrationMiddleware } from "../middleware/maintenanceMiddleware.js"
 import { protect, allowRoles } from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -37,6 +39,9 @@ router.post("/change-password", changeTeacherPassword);
 // PROFILE
 router.get("/profile", getTeacherProfile);
 router.put("/profile", updateTeacherProfile);
+
+//profile photo upload
+router.post("/profile/photo", upload.single("photo"), uploadTeacherProfilePhoto);
 
 // RESOURCES
 router.post("/resource/upload", uploadResource);

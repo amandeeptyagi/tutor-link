@@ -9,7 +9,7 @@ export const getStudentProfile = () => API.get("/student/profile");
 export const updateStudentProfile = (data) => API.put("/student/profile", data);
 
 //profile photo
-export const uploadProfilePhoto = (file) => {
+export const uploadStudentProfilePhoto = (file) => {
   const formData = new FormData();
   formData.append("photo", file);
 

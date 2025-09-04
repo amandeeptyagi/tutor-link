@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
+import cloudinary from "../config/cloudinary.js";
 import * as TeacherQuery from "../queries/teacherQueries.js";
 import generateToken from "../utils/generateToken.js";
 
@@ -66,6 +67,55 @@ export const updateTeacherProfile = asyncHandler(async (req, res) => {
     await TeacherQuery.updateTeacherProfile(req.user.id, req.body);
     res.json({ success: true, message: "Profile updated" });
 });
+
+// update profile photo url
+export const uploadTeacherProfilePhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const teacher = await TeacherQuery.getTeacherProfile(req.user.id);
+    const oldPhotoUrl = teacher.profile_photo;
+
+    const streamUpload = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "teacher_profiles" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        stream.end(fileBuffer); //pipe buffer directly
+      });
+    };
+
+    const uploaded = await streamUpload(req.file.buffer);
+
+    // Save URL to DB
+    const updated = await TeacherQuery.updateTeacherProfilePhoto(req.user.id, uploaded.secure_url);
+
+    if (oldPhotoUrl) {
+      try {
+        // Extract public_id from URL
+        const publicId = oldPhotoUrl
+          .split("/")
+          .slice(-1)[0]
+          .split(".")[0]; // get filename without extension
+        await cloudinary.uploader.destroy(`teacher_profiles/${publicId}`);
+      } catch (err) {
+        console.warn("Failed to delete old photo from Cloudinary:", err.message);
+      }
+    }
+
+    res.json({ message: "Profile photo updated", url: updated.profile_photo });
+  } catch (err) {
+    console.error("Photo upload error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // Upload resource
 export const uploadResource = asyncHandler(async (req, res) => {

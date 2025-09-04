@@ -8,6 +8,16 @@ export const changeTeacherPassword = (data) => API.post("/teacher/change-passwor
 export const getTeacherProfile = () => API.get("/teacher/profile");
 export const updateTeacherProfile = (data) => API.put("/teacher/profile", data);
 
+//profile photo
+export const uploadTeacherProfilePhoto = (file) => {
+  const formData = new FormData();
+  formData.append("photo", file);
+
+  return API.post("/teacher/profile/photo", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
 // Resources
 export const uploadResource = (data) => API.post("/teacher/resource/upload", data);
 export const listResources = () => API.get("/teacher/resource/list");

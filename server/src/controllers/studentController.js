@@ -73,7 +73,7 @@ export const updateStudentProfile = asyncHandler(async (req, res) => {
 });
 
 // update profile photo url
-export const uploadProfilePhoto = async (req, res) => {
+export const uploadStudentProfilePhoto = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });

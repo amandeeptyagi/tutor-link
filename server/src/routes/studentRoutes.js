@@ -17,7 +17,7 @@ import {
     getTeacherRatings,
     getTeacherGallery,
     getResourcesIfSubscribed,
-    uploadProfilePhoto 
+    uploadStudentProfilePhoto 
 } from "../controllers/studentController.js";
 
 import { maintenanceMiddleware, allowRegistrationMiddleware } from "../middleware/maintenanceMiddleware.js"
@@ -43,7 +43,7 @@ router.get("/profile", getStudentProfile)
 router.put("/profile", updateStudentProfile)
 
 //profile photo upload
-router.post("/profile/photo", upload.single("photo"), uploadProfilePhoto);
+router.post("/profile/photo", upload.single("photo"), uploadStudentProfilePhoto);
 
 // TEACHER SEARCH & VIEW
 router.get("/teachers", searchTeachers)

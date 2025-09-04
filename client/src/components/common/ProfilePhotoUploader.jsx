@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { uploadProfilePhoto } from "@/services/studentApi";
+import { uploadStudentProfilePhoto } from "@/services/studentApi";
+import { uploadTeacherProfilePhoto } from "@/services/teacherApi";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 
@@ -20,7 +21,7 @@ const ProfilePhotoUploader = ({ currentPhoto, onUploadSuccess }) => {
     setUploading(true);
 
     try {
-      const res = await uploadProfilePhoto(file);
+      const res = await uploadTeacherProfilePhoto(file);
       const newUrl = res.data.url;
       setPreview(newUrl); // update preview with Cloudinary URL
 

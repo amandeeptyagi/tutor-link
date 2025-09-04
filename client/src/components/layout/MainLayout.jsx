@@ -23,7 +23,7 @@ const MainLayout = ({ children }) => {
       <Toaster
         position="top-center"
         toastOptions={{
-          duration: 3000,
+          duration: 1000,
           style: {
             background: "#fff",
             color: "#333",

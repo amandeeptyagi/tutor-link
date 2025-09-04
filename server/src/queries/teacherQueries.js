@@ -36,39 +36,53 @@ export const getTeacherProfile = async (id) => {
   return teacher;
 };
 
+
+
 export const updateTeacherProfile = async (id, updates) => {
   const {
-    name, email, phone, profile_photo, gender, mode, street, city,
+    name, email, phone, gender, mode, street, city,
     state, pincode, subjects, class_from, class_to, timing,
     institute_name, location
   } = updates;
   const result = await pool.query(
     `UPDATE teachers SET
-      name = $1,
-      email = $17
-      phone = $2,
-      profile_photo = $3,
-      gender = $4,
-      mode = $5,
-      street = $6,
-      city = $7,
-      state = $8,
-      pincode = $9,
-      subjects = $10,
-      class_from = $11,
-      class_to = $12,
-      timing = $13,
-      institute_name = $14,
-      location = $15,
-      updated_at = CURRENT_TIMESTAMP
-     WHERE id = $16
-     RETURNING *`,
+    name = $1,
+    email = $2,
+    phone = $3,
+    gender = $4,
+    mode = $5,
+    street = $6,
+    city = $7,
+    state = $8,
+    pincode = $9,
+    subjects = $10,
+    class_from = $11,
+    class_to = $12,
+    timing = $13,
+    institute_name = $14,
+    location = $15,
+    updated_at = CURRENT_TIMESTAMP
+    WHERE id = $16
+    RETURNING *`,
     [
-      name, phone, profile_photo, gender, mode, street, city,
+      name, email, phone, gender, mode, street, city,
       state, pincode, subjects, class_from, class_to, timing,
-      institute_name, location, id, email
+      institute_name, location, id
     ]
   );
+  return result.rows[0];
+};
+
+// update profile photo url
+export const updateTeacherProfilePhoto = async (teacherId, photoUrl) => {
+  const query = `
+    UPDATE teachers 
+    SET profile_photo = $1, updated_at = NOW() 
+    WHERE id = $2
+    RETURNING profile_photo;
+  `;
+  const values = [photoUrl, teacherId];
+  const result = await pool.query(query, values);
   return result.rows[0];
 };
 

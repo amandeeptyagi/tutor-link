@@ -180,7 +180,7 @@ useEffect(() => {
                   <Button className="flex-1" asChild><Link to={`/student/teacher/${sub.teacher.id}`}>View Profile</Link></Button>
                   <Button
                     variant="destructive"
-                    className="text-xs"
+                    className="text-xs flex-1 overflow-hidden"
                     onClick={() => handleCancel(sub.id)}
                   >
                     Cancel Subscription
