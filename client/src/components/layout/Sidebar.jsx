@@ -17,6 +17,9 @@ const Sidebar = ({ open, onClose }) => {
 
   const teacherLinks = [
     { to: "/teacher/dashboard", label: "Dashboard" },
+    { to: "/teacher/profile", label: "Profile" },
+    { to: "/teacher/gallery", label: "Gallery" },
+    { to: "/teacher/subscriptions", label: "Subscriptions" },
     { to: "/teacher/resources", label: "Resources" },
   ];
 

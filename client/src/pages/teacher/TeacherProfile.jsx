@@ -73,6 +73,7 @@ const TeacherProfile = () => {
               onUploadSuccess={(newUrl) =>
                 setProfile({ ...profile, profile_photo: newUrl })
               }
+              role={profile.role}
             />
           </div>
 
@@ -101,18 +102,12 @@ const TeacherProfile = () => {
           {/* Gender */}
           <div>
             <label className="block text-sm">Gender</label>
-            {/* <Input
-              value={profile.gender || ""}
-              disabled={!editMode}
-              onChange={(e) => setProfile({ ...profile, gender: e.target.value })}
-            /> */}
             <select
               value={profile.gender || ""}
               disabled={!editMode}
               onChange={(e) => setProfile({ ...profile, gender: e.target.value })}
               className="border w-full h-9 text-sm rounded"
             >
-              <option value="">Gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
             </select>
@@ -121,26 +116,50 @@ const TeacherProfile = () => {
           {/* Teaching Mode */}
           <div>
             <label className="block text-sm">Mode (Online/Offline/Both)</label>
-            <Input
-              value={profile.mode?.join(", ") || ""}
-              disabled={!editMode}
-              onChange={(e) =>
-                setProfile({ ...profile, mode: e.target.value.split(",") })
-              }
-            />
-            <select
-              value={profile.mode?.join(", ") || ""}
-              disabled={!editMode}
-              onChange={(e) =>
-                setProfile({ ...profile, mode: e.target.value.split(",") })
-              }
-              className="border w-full h-9 text-sm rounded"
-            >
-              <option value="">Mode</option>
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
-              <option value="online,offline">Both</option>
-            </select>
+
+            <div className="flex gap-5 mt-2">
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="online"
+                  checked={profile.mode?.length === 1 && profile.mode[0] === "online"}
+                  disabled={!editMode}
+                  onChange={() => setProfile({ ...profile, mode: ["online"] })}
+                  className="mr-1"
+                />
+                Online
+              </label>
+              
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="offline"
+                  checked={profile.mode?.length === 1 && profile.mode[0] === "offline"}
+                  disabled={!editMode}
+                  onChange={() => setProfile({ ...profile, mode: ["offline"] })}
+                  className="mr-1"
+                />
+                Offline
+              </label>
+            
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="both"
+                  checked={
+                    profile.mode?.includes("online") && profile.mode?.includes("offline")
+                  }
+                  disabled={!editMode}
+                  onChange={() => setProfile({ ...profile, mode: ["online", "offline"] })}
+                  className="mr-1"
+                />
+                Both
+              </label>
+            </div>
+
           </div>
 
           {/* Subjects */}

@@ -4,7 +4,7 @@ import { uploadTeacherProfilePhoto } from "@/services/teacherApi";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 
-const ProfilePhotoUploader = ({ currentPhoto, onUploadSuccess }) => {
+const ProfilePhotoUploader = ({ currentPhoto, onUploadSuccess, role }) => {
   const [preview, setPreview] = useState(currentPhoto);
   const [uploading, setUploading] = useState(false);
 
@@ -21,7 +21,9 @@ const ProfilePhotoUploader = ({ currentPhoto, onUploadSuccess }) => {
     setUploading(true);
 
     try {
-      const res = await uploadTeacherProfilePhoto(file);
+      let res;
+      if(role==='teacher') res = await uploadTeacherProfilePhoto(file);
+      if(role==='student') res = await uploadStudentProfilePhoto(file);
       const newUrl = res.data.url;
       setPreview(newUrl); // update preview with Cloudinary URL
 

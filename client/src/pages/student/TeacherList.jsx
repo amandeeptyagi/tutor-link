@@ -220,7 +220,7 @@ export default function TeacherList() {
                     />
                   </button>
                   <img
-                    src={t.profile_photo || "https://placehold.co/80x80/orange/white"}
+                    src={t.profile_photo || `https://placehold.co/80x80/orange/white?text=${t.name}`}
                     alt={t.name}
                     className="w-24 h-24 rounded-full object-cover"
                   />

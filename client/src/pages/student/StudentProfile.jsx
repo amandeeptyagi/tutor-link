@@ -64,6 +64,7 @@ const StudentProfile = () => {
             <ProfilePhotoUploader
               currentPhoto={profile.profile_photo}
               onUploadSuccess={(newUrl) => setProfile({ ...profile, profile_photo: newUrl })}
+              role={profile.role}
             />
           </div>
           <div>
