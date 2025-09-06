@@ -126,7 +126,7 @@ export const deleteGalleryImage = async (teacherId, imageId) => {
 // SUBSCRIPTIONS
 export const getTeacherSubscriptions = async (teacherId) => {
   const result = await pool.query(
-    `SELECT subscriptions.*, students.name, students.email
+    `SELECT subscriptions.*, students.name, students.profile_photo, students.phone, students.address
      FROM subscriptions
      JOIN students ON subscriptions.student_id = students.id
      WHERE subscriptions.teacher_id = $1
