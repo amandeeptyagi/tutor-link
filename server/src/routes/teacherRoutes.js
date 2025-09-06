@@ -49,7 +49,7 @@ router.get("/resource/list", listResources);
 router.delete("/resource/:id", deleteResource);
 
 // GALLERY
-router.post("/gallery/upload", uploadGalleryImage);
+router.post("/gallery/upload", upload.single("image"), uploadGalleryImage);
 router.get("/gallery", getGalleryImages);
 router.delete("/gallery/:id", deleteGalleryImage);
 

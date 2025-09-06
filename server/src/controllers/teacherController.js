@@ -138,9 +138,30 @@ export const deleteResource = asyncHandler(async (req, res) => {
 
 // Upload gallery image
 export const uploadGalleryImage = asyncHandler(async (req, res) => {
-    const { image_url } = req.body;
-    await TeacherQuery.uploadGalleryImage(req.user.id, image_url);
-    res.status(201).json({ success: true, message: "Gallery image uploaded" });
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No file uploaded" });
+  }
+
+  // Upload to Cloudinary
+const streamUpload = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "teacher_gallery" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    stream.end(fileBuffer);
+  });
+};
+
+const uploaded = await streamUpload(req.file.buffer);
+
+// Save URL to DB
+await TeacherQuery.uploadGalleryImage(req.user.id, uploaded.secure_url);
+
+res.status(201).json({ success: true, message: "Image uploaded" });
 });
 
 // Get gallery images

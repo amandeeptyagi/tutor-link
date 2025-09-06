@@ -119,7 +119,7 @@ export const getGalleryImages = async (teacherId) => {
   return result.rows;
 };
 
-export const deleteGalleryImage = async (teacherId, imageId) => {
+export const deleteGalleryImage = async (imageId, teacherId) => {
   await pool.query(`DELETE FROM gallery WHERE id = $1 AND teacher_id = $2`, [imageId, teacherId]);
 };
 
