@@ -21,6 +21,8 @@ export const uploadTeacherProfilePhoto = (file) => {
 // Resources
 export const uploadResource = (data) => API.post("/teacher/resource/upload", data);
 export const listResources = () => API.get("/teacher/resource/list");
+export const downloadResource = (resourceId) => 
+  `${import.meta.env.VITE_BACKEND_URL}/teacher/resource/download/${resourceId}`;
 export const deleteResource = (resourceId) => API.delete(`/teacher/resource/${resourceId}`);
 
 // Gallery

@@ -26,7 +26,7 @@ export const getTeacherByIdWithPassword = async (teacherId) => {
 };
 
 export const updateTeacherPassword = async (id, hashedPassword) => {
-    await pool.query(`UPDATE teachers SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`, [hashedPassword, id]);
+  await pool.query(`UPDATE teachers SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`, [hashedPassword, id]);
 };
 
 // PROFILE
@@ -87,11 +87,20 @@ export const updateTeacherProfilePhoto = async (teacherId, photoUrl) => {
 };
 
 // RESOURCES
-export const uploadResource = async (teacherId, title, file_url, class_from, class_to) => {
+export const uploadResource = async (teacherId, title, file_url, public_id, class_from, class_to, download_name) => {
   const result = await pool.query(
-    `INSERT INTO resources (teacher_id, title, file_url, class_from, class_to)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [teacherId, title, file_url, class_from, class_to]
+    `INSERT INTO resources (teacher_id, title, file_url, class_from, class_to, public_id, download_name)
+     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    [teacherId, title, file_url, class_from, class_to, public_id, download_name]
+  );
+  return result.rows[0];
+};
+
+// Get single resource by ID
+export const getResourceById = async (resourceId, teacherId) => {
+  const result = await pool.query(
+    `SELECT * FROM resources WHERE id = $1 AND teacher_id = $2 LIMIT 1`,
+    [resourceId, teacherId]
   );
   return result.rows[0];
 };
@@ -101,8 +110,9 @@ export const listResources = async (teacherId) => {
   return result.rows;
 };
 
-export const deleteResource = async (teacherId, resourceId) => {
-  await pool.query(`DELETE FROM resources WHERE id = $1 AND teacher_id = $2`, [resourceId, teacherId]);
+export const deleteResource = async (resourceId, teacherId) => {
+  const result = await pool.query(`DELETE FROM resources WHERE id = $1 AND teacher_id = $2 RETURNING *`, [resourceId, teacherId]);
+  return result.rows[0];
 };
 
 // GALLERY

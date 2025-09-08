@@ -16,6 +16,7 @@ import {
   getTeacherRatings,
   getTeacherAnalytics,
   uploadTeacherProfilePhoto,
+  downloadResource
 } from "../controllers/teacherController.js";
 
 import { maintenanceMiddleware, allowRegistrationMiddleware } from "../middleware/maintenanceMiddleware.js"
@@ -44,8 +45,9 @@ router.put("/profile", updateTeacherProfile);
 router.post("/profile/photo", upload.single("photo"), uploadTeacherProfilePhoto);
 
 // RESOURCES
-router.post("/resource/upload", uploadResource);
+router.post("/resource/upload", upload.single("file"), uploadResource);
 router.get("/resource/list", listResources);
+router.get("/resource/download/:id", downloadResource);
 router.delete("/resource/:id", deleteResource);
 
 // GALLERY
