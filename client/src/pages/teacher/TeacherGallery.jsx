@@ -12,7 +12,8 @@ import { toast } from "react-hot-toast";
 const TeacherGallery = () => {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState(null); 
 
   useEffect(() => {
     fetchImages();
@@ -32,7 +33,7 @@ const TeacherGallery = () => {
     if (!file) return toast.error("Please select an image");
 
     try {
-      setLoading(true);
+      setUploading(true);
       const formData = new FormData();
       formData.append("image", file);
 
@@ -43,17 +44,20 @@ const TeacherGallery = () => {
     } catch (err) {
       toast.error("Upload failed");
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
   const handleDelete = async (id) => {
     try {
+      setDeletingId(id); 
       await deleteGalleryImage(id);
       toast.success("Image deleted");
       fetchImages();
     } catch (err) {
       toast.error("Delete failed");
+    } finally {
+      setDeletingId(null); 
     }
   };
 
@@ -71,8 +75,8 @@ const TeacherGallery = () => {
           accept="image/*"
           onChange={(e) => setFile(e.target.files[0])}
         />
-        <Button type="submit" disabled={loading}>
-          {loading ? "Uploading..." : "Upload"}
+        <Button type="submit" disabled={uploading}>
+          {uploading ? "Uploading..." : "Upload"}
         </Button>
       </form>
 
@@ -92,9 +96,10 @@ const TeacherGallery = () => {
                 <Button
                   size="sm"
                   variant="destructive"
+                  disabled={deletingId === img.id} 
                   onClick={() => handleDelete(img.id)}
                 >
-                  Delete
+                  {deletingId === img.id ? "Deleting..." : "Delete"}
                 </Button>
               </CardContent>
             </Card>

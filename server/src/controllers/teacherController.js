@@ -245,7 +245,7 @@ export const uploadGalleryImage = asyncHandler(async (req, res) => {
   const uploaded = await streamUpload(req.file.buffer);
 
   // Save URL to DB
-  await TeacherQuery.uploadGalleryImage(req.user.id, uploaded.secure_url);
+  await TeacherQuery.uploadGalleryImage(req.user.id, uploaded.secure_url, uploaded.public_id);
 
   res.status(201).json({ success: true, message: "Image uploaded" });
 });
@@ -258,9 +258,18 @@ export const getGalleryImages = asyncHandler(async (req, res) => {
 
 // Delete gallery image
 export const deleteGalleryImage = asyncHandler(async (req, res) => {
+  const image = await TeacherQuery.getGalleryImageById(req.params.id, req.user.id);
+  if (!image) {
+    return res.status(404).json({ success: false, message: "Image not found" });
+  }
+
+  await cloudinary.uploader.destroy(image.public_id);
+
   await TeacherQuery.deleteGalleryImage(req.params.id, req.user.id);
+
   res.json({ success: true, message: "Image deleted" });
 });
+
 
 // Get subscriptions
 export const getTeacherSubscriptions = asyncHandler(async (req, res) => {

@@ -116,10 +116,10 @@ export const deleteResource = async (resourceId, teacherId) => {
 };
 
 // GALLERY
-export const uploadGalleryImage = async (teacherId, image_url) => {
+export const uploadGalleryImage = async (teacherId, image_url, public_id) => {
   const result = await pool.query(
-    `INSERT INTO gallery (teacher_id, image_url) VALUES ($1, $2) RETURNING *`,
-    [teacherId, image_url]
+    `INSERT INTO gallery (teacher_id, image_url, public_id) VALUES ($1, $2, $3) RETURNING *`,
+    [teacherId, image_url, public_id]
   );
   return result.rows[0];
 };
@@ -127,6 +127,15 @@ export const uploadGalleryImage = async (teacherId, image_url) => {
 export const getGalleryImages = async (teacherId) => {
   const result = await pool.query(`SELECT * FROM gallery WHERE teacher_id = $1 ORDER BY created_at DESC`, [teacherId]);
   return result.rows;
+};
+
+// Get single image by ID
+export const getGalleryImageById = async (imageId, teacherId) => {
+  const result = await pool.query(
+    `SELECT * FROM gallery WHERE id = $1 AND teacher_id = $2 LIMIT 1`,
+    [imageId, teacherId]
+  );
+  return result.rows[0];
 };
 
 export const deleteGalleryImage = async (imageId, teacherId) => {
