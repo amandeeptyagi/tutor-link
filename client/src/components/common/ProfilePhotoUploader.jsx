@@ -46,8 +46,8 @@ const ProfilePhotoUploader = ({ currentPhoto, onUploadSuccess, role }) => {
         alt="Profile Image"
         className="w-28 h-28 rounded-full object-cover shadow-md"
       />
-      <label className="cursor-pointer mt-2">
-        <span className="px-4 py-3 bg-blue-600 text-white rounded-lg text-sm">
+      <label className={`${!uploading && 'cursor-pointer'} mt-2`}>
+        <span className={`px-4 py-3 ${!uploading ? 'bg-blue-600' : 'bg-blue-400'} text-white rounded-lg text-sm`}>
           {uploading ? "Uploading..." : "Change Photo"}
         </span>
         <input

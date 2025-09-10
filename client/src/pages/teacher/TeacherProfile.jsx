@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
 import ProfilePhotoUploader from "@/components/common/ProfilePhotoUploader";
+import LocationPicker from "@/components/common/LocationPicker";
 
 const TeacherProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -18,6 +19,10 @@ const TeacherProfile = () => {
     currentPassword: "",
     newPassword: "",
   });
+
+  // Loading states for buttons
+  const [updating, setUpdating] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
 
   // Fetch teacher profile
   useEffect(() => {
@@ -37,22 +42,28 @@ const TeacherProfile = () => {
   // Update profile
   const handleUpdate = async () => {
     try {
+      setUpdating(true);
       await updateTeacherProfile(profile);
       toast.success("Profile updated!");
       setEditMode(false);
     } catch (err) {
       toast.error("Update failed");
+    } finally {
+      setUpdating(false);
     }
   };
 
   // Change password
   const handlePasswordChange = async () => {
     try {
+      setChangingPassword(true);
       await changeTeacherPassword(passwordData);
       toast.success("Password changed!");
       setPasswordData({ currentPassword: "", newPassword: "" });
     } catch (err) {
       toast.error("Password change failed");
+    } finally {
+      setChangingPassword(false);
     }
   };
 
@@ -116,7 +127,6 @@ const TeacherProfile = () => {
           {/* Teaching Mode */}
           <div>
             <label className="block text-sm">Mode (Online/Offline/Both)</label>
-
             <div className="flex gap-5 mt-2">
               <label>
                 <input
@@ -130,7 +140,6 @@ const TeacherProfile = () => {
                 />
                 Online
               </label>
-              
               <label>
                 <input
                   type="radio"
@@ -143,7 +152,6 @@ const TeacherProfile = () => {
                 />
                 Offline
               </label>
-            
               <label>
                 <input
                   type="radio"
@@ -153,13 +161,14 @@ const TeacherProfile = () => {
                     profile.mode?.includes("online") && profile.mode?.includes("offline")
                   }
                   disabled={!editMode}
-                  onChange={() => setProfile({ ...profile, mode: ["online", "offline"] })}
+                  onChange={() =>
+                    setProfile({ ...profile, mode: ["online", "offline"] })
+                  }
                   className="mr-1"
                 />
                 Both
               </label>
             </div>
-
           </div>
 
           {/* Subjects */}
@@ -260,10 +269,17 @@ const TeacherProfile = () => {
             />
           </div>
 
+          {/* Location Picker */}
+          <LocationPicker profile={profile} setProfile={setProfile} editMode={editMode} />
+
           {/* Save/Edit Button */}
           {editMode ? (
-            <Button onClick={handleUpdate} className="mt-4 w-full">
-              Save Changes
+            <Button
+              onClick={handleUpdate}
+              disabled={updating}
+              className="mt-4 w-full"
+            >
+              {updating ? "Updating..." : "Save Changes"}
             </Button>
           ) : (
             <Button
@@ -307,8 +323,12 @@ const TeacherProfile = () => {
               }
             />
           </div>
-          <Button onClick={handlePasswordChange} className="mt-4 w-full">
-            Update Password
+          <Button
+            onClick={handlePasswordChange}
+            disabled={changingPassword}
+            className="mt-4 w-full"
+          >
+            {changingPassword ? "Changing..." : "Update Password"}
           </Button>
         </CardContent>
       </Card>

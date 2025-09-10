@@ -65,9 +65,17 @@ export const getTeacherProfile = asyncHandler(async (req, res) => {
 
 // Update profile
 export const updateTeacherProfile = asyncHandler(async (req, res) => {
-  await TeacherQuery.updateTeacherProfile(req.user.id, req.body);
+  const updates = req.body;
+
+  if (updates.latitude && updates.longitude) {
+      updates.latitude = parseFloat(updates.latitude)
+      updates.longitude = parseFloat(updates.longitude)
+  }
+
+  await TeacherQuery.updateTeacherProfile(req.user.id, updates);
   res.json({ success: true, message: "Profile updated" });
 });
+
 
 // update profile photo url
 export const uploadTeacherProfilePhoto = async (req, res) => {

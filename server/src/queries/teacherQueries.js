@@ -31,7 +31,35 @@ export const updateTeacherPassword = async (id, hashedPassword) => {
 
 // PROFILE
 export const getTeacherProfile = async (id) => {
-  const result = await pool.query(`SELECT * FROM teachers WHERE id = $1`, [id]);
+  const result = await pool.query(
+    `SELECT 
+      id,
+      name,
+      email,
+      google_id,
+      phone,
+      profile_photo,
+      gender,
+      mode,
+      street,
+      city,
+      state,
+      pincode,
+      subjects,
+      class_from,
+      class_to,
+      timing,
+      institute_name,
+      is_verified,
+      role,
+      created_at,
+      updated_at,
+      ST_Y(location::geometry) AS latitude,
+      ST_X(location::geometry) AS longitude
+    FROM teachers
+    WHERE id = $1`,
+    [id]
+  );
   const { password, otp, otp_expires_at, ...teacher } = result.rows[0] || {};
   return teacher;
 };
@@ -42,7 +70,7 @@ export const updateTeacherProfile = async (id, updates) => {
   const {
     name, email, phone, gender, mode, street, city,
     state, pincode, subjects, class_from, class_to, timing,
-    institute_name, location
+    institute_name, longitude, latitude
   } = updates;
   const result = await pool.query(
     `UPDATE teachers SET
@@ -60,14 +88,14 @@ export const updateTeacherProfile = async (id, updates) => {
     class_to = $12,
     timing = $13,
     institute_name = $14,
-    location = $15,
+    location = ST_SetSRID(ST_MakePoint($15::double precision, $16::double precision), 4326),
     updated_at = CURRENT_TIMESTAMP
-    WHERE id = $16
+    WHERE id = $17
     RETURNING *`,
     [
       name, email, phone, gender, mode, street, city,
       state, pincode, subjects, class_from, class_to, timing,
-      institute_name, location, id
+      institute_name, longitude, latitude, id
     ]
   );
   return result.rows[0];
