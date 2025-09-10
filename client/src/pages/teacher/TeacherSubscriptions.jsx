@@ -12,6 +12,7 @@ const TeacherSubscriptions = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("pending");
+  const [loadingAction, setLoadingAction] = useState({ id: null, type: null });
 
   // Fetch subscriptions
   useEffect(() => {
@@ -32,23 +33,29 @@ const TeacherSubscriptions = () => {
 
   // Update status
   const handleUpdateStatus = async (id, status) => {
+    setLoadingAction({ id, type: status });
     try {
       await updateSubscriptionStatus(id, status);
       toast.success("Subscription updated");
       fetchSubscriptions();
     } catch (err) {
       toast.error("Update failed");
+    } finally {
+      setLoadingAction({ id: null, type: null });
     }
   };
 
   // Delete subscription
   const handleDelete = async (id) => {
+    setLoadingAction({ id, type: "delete" });
     try {
       await deleteSubscription(id);
       toast.success("Subscription deleted");
       fetchSubscriptions();
     } catch (err) {
       toast.error("Delete failed");
+    } finally {
+      setLoadingAction({ id: null, type: null });
     }
   };
 
@@ -91,29 +98,31 @@ const TeacherSubscriptions = () => {
                 <h3 className="text-lg font-semibold"><b>Name :</b> {sub.name || ""}</h3>                             
                 <p className="text-sm"><b>Phone No. :</b> {sub.phone || ""}</p>                             
                 <p className="text-sm"><b>Address :</b> {sub.address || ""}</p>                             
-                  <p className="text-sm mb-5">
-                    <b>Status :</b>{" "}
-                    <span
-                      className={`font-medium ${
-                        sub.status === "approved"
-                          ? "text-green-600"
-                          : sub.status === "rejected"
-                          ? "text-red-600"
-                          : "text-yellow-600"
-                      }`}
-                    >
-                      {sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}
-                    </span>
-                  </p>
-                
+                <p className="text-sm mb-5">
+                  <b>Status :</b>{" "}
+                  <span
+                    className={`font-medium ${
+                      sub.status === "approved"
+                        ? "text-green-600"
+                        : sub.status === "rejected"
+                        ? "text-red-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
+                    {sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}
+                  </span>
+                </p>
 
                 <div className="flex gap-2 justify-between w-full">
                   {sub.status !== "approved" && (
                     <Button
                       size="sm"
                       onClick={() => handleUpdateStatus(sub.id, "approved")}
+                      disabled={loadingAction.id === sub.id && loadingAction.type === "approved"}
                     >
-                      Accept
+                      {loadingAction.id === sub.id && loadingAction.type === "approved"
+                        ? "Approving..."
+                        : "Accept"}
                     </Button>
                   )}
                   {sub.status !== "rejected" && (
@@ -121,16 +130,22 @@ const TeacherSubscriptions = () => {
                       size="sm"
                       variant="destructive"
                       onClick={() => handleUpdateStatus(sub.id, "rejected")}
+                      disabled={loadingAction.id === sub.id && loadingAction.type === "rejected"}
                     >
-                      Reject
+                      {loadingAction.id === sub.id && loadingAction.type === "rejected"
+                        ? "Rejecting..."
+                        : "Reject"}
                     </Button>
                   )}
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleDelete(sub.id)}
+                    disabled={loadingAction.id === sub.id && loadingAction.type === "delete"}
                   >
-                    Delete
+                    {loadingAction.id === sub.id && loadingAction.type === "delete"
+                      ? "Deleting..."
+                      : "Delete"}
                   </Button>
                 </div>
               </CardContent>
